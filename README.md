@@ -82,7 +82,7 @@ If you're unsure which is which, stop and check before continuing.
 **A PC that only runs Linux**: *Use a best-effort default layout* → ext4 is fine.
 It wipes that whole disk.
 
-Then pick **Install**, wait, choose ** Reboot **, and pull out the USB stick.
+Then pick **Install**, wait, choose **Reboot**, and pull out the USB stick.
 
 ---
 
