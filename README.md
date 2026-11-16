@@ -1,11 +1,11 @@
 # Vymnkoo's reinstall kit
 
 Puts a whole Arch Linux setup back on a fresh install: caelestia + Hyprland, all
-the programs, the configs, fonts and the fixes found along the way
+the programs, the configs, fonts, and the fixes found along the way
 (NVIDIA, Windows clock, Ardour realtime, Spotify key, ...).
 
 > [!IMPORTANT]
-> This repo was originally a private repo for personal installation of Linux. This was not meant for public installation, but if u want to install this, go ahead (: (I changed it to public cause i'am lazy to log in to my own GitHub repo lmao)
+> This repo was originally a private repo for my personal Linux installation. This was not meant for public installation, but if u want to install this, go ahead (:
 
 **Online wiki:** https://vymnkoo-wiki.infinityfree.me
 
@@ -82,7 +82,7 @@ If you're unsure which is which, stop and check before continuing.
 **A PC that only runs Linux**: *Use a best-effort default layout* → ext4 is fine.
 It wipes that whole disk.
 
-Then pick **Install**, wait, choose **reboot**, and pull out the USB stick.
+Then pick **Install**, wait, choose ** Reboot **, and pull out the USB stick.
 
 ---
 
@@ -111,7 +111,7 @@ Then pick **Install**, wait, choose **reboot**, and pull out the USB stick.
    └──────────────────────────────────────────────────┘
    ```
 5. Wait. It goes through 9 steps and shows ✔ for each thing that worked.
-   Around step 5 **the desktop changes its look**. That's caelestia arriving,
+   Around step 5 **the desktop changes its look**. That's Caelestia arriving,
    and it's normal.
 
 If something fails (internet drops, AUR is down), just **run it again**. It
