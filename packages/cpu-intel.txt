@@ -1,0 +1,2 @@
+# Picked automatically for Intel CPUs.
+intel-ucode

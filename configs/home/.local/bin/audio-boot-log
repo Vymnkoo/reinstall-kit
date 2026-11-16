@@ -1,0 +1,14 @@
+#!/bin/sh
+# Records the audio state shortly after login, for debugging "no sound after boot".
+sleep 20
+log="$HOME/.local/state/audio-boot.log"
+{
+  echo "===== $(date '+%F %T') ====="
+  wpctl status | sed -n '/^Audio/,/^Video/p'
+  echo "--- default sink:"; wpctl inspect @DEFAULT_AUDIO_SINK@ 2>&1 | grep -E 'node.name|node.description'
+  wpctl get-volume @DEFAULT_AUDIO_SINK@ 2>&1
+  echo "--- streams:"; pactl list sink-inputs 2>&1 | grep -E 'Sink:|Mute|Volume: front|application.name'
+} > "$log.new" 2>&1
+# keep the last 5 boots
+[ -f "$log" ] && cat "$log" >> "$log.new"
+awk '/^===== /{n++} n<=5' "$log.new" > "$log"; rm -f "$log.new"

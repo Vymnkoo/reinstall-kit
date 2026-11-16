@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Wiki for an Arch Linux + Hyprland + caelestia reinstall kit: setup.sh, kit-update.sh, package groups, configs and troubleshooting.">
+<title>Reinstall Kit Wiki</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap">
+<style>
+/* Layout: wiki — sticky left page index + search, one article at a time (hash-routed), mono for anything you type */
+:root {
+  --bg: #f6f8fa;
+  --surface: #ffffff;
+  --fg: #172231;
+  --muted: #566476;
+  --line: #d9e0e8;
+  --accent: #1478b4;        /* Arch blue, darkened for text contrast */
+  --accent-soft: #e3f0f8;
+  --code-bg: #eef2f6;
+  --good: #1f7a4d;
+  --warn: #9a5b00;
+  --warn-soft: #fbf1e1;
+  --font-display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "JetBrains Mono", monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e141c; --surface: #141c26; --fg: #e3e9f0; --muted: #93a1b2; --line: #263241;
+    --accent: #5cb8ec; --accent-soft: #15293a; --code-bg: #1a2431; --good: #5fcf96; --warn: #f0b45a; --warn-soft: #2a2114;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e141c; --surface: #141c26; --fg: #e3e9f0; --muted: #93a1b2; --line: #263241;
+  --accent: #5cb8ec; --accent-soft: #15293a; --code-bg: #1a2431; --good: #5fcf96; --warn: #f0b45a; --warn-soft: #2a2114;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font: 15px/1.6 var(--font-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 48px;
+}
+a { color: var(--accent); text-underline-offset: 2px; }
+a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+code, kbd, pre { font-family: var(--font-mono); font-size: 0.88em; }
+:not(pre) > code { background: var(--code-bg); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+kbd { border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; background: var(--surface); }
+
+.shell { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 40px; }
+header.top { max-width: 1120px; margin: 0 auto; padding-block: 28px 20px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px; border-bottom: 1px solid var(--line); margin-bottom: 28px; }
+header.top h1 { font: 700 22px/1.2 var(--font-display); margin: 0; letter-spacing: -0.01em; }
+header.top h1 span { color: var(--accent); }
+header.top .meta { color: var(--muted); font: 13px var(--font-mono); }
+
+nav.side { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px); align-self: start; display: flex; flex-direction: column; gap: 14px; }
+nav.side input { width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--fg); font: 14px var(--font-body); }
+nav.side .group-label { font: 600 11px var(--font-body); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 4px 0 2px; }
+nav.side ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1px; }
+nav.side a { display: block; padding: 4px 10px; border-radius: 5px; color: var(--fg); text-decoration: none; font-size: 14px; }
+nav.side a:hover { background: var(--code-bg); }
+nav.side a[aria-current="page"] { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+#results { display: flex; flex-direction: column; gap: 6px; }
+#results a { padding: 6px 10px; background: var(--surface); border: 1px solid var(--line); }
+#results small { display: block; color: var(--muted); font-size: 12px; line-height: 1.4; }
+#results .none { color: var(--muted); font-size: 13px; padding: 0 10px; }
+
+main { min-width: 0; }
+article { max-width: 72ch; }
+article h2 { font: 600 28px/1.2 var(--font-display); margin: 0 0 6px; letter-spacing: -0.015em; text-wrap: balance; }
+article .lead { color: var(--muted); font-size: 16px; margin: 0 0 24px; }
+article h3 { font: 600 18px/1.3 var(--font-display); margin: 32px 0 8px; text-wrap: balance; }
+article p, article ul, article ol { margin: 0 0 14px; }
+article li { margin-bottom: 4px; }
+pre { background: var(--code-bg); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; overflow-x: auto; line-height: 1.5; margin: 0 0 16px; }
+.table-wrap { overflow-x: auto; margin: 0 0 18px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+th { font-weight: 600; font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); background: var(--code-bg); }
+td code { white-space: normal; overflow-wrap: break-word; }  /* long commands in the last column wrap at spaces */
+td:not(:last-child) code { white-space: nowrap; }            /* names, files and versions in the narrow columns never break */
+
+.note { border: 1px solid var(--line); background: var(--surface); border-radius: 6px; padding: 12px 14px; margin: 0 0 18px; font-size: 14px; }
+.note.warn { border-color: color-mix(in srgb, var(--warn) 40%, var(--line)); background: var(--warn-soft); }
+.note strong:first-child { display: block; margin-bottom: 2px; }
+
+.steps { list-style: none; padding: 0; counter-reset: s; display: flex; flex-direction: column; gap: 0; }
+.steps > li { counter-increment: s; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); margin: 0; }
+.steps > li:last-child { border-bottom: 0; }
+.steps > li::before { content: counter(s); font: 600 14px/28px var(--font-mono); text-align: center; width: 28px; height: 28px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); }
+.steps h4 { margin: 2px 0 4px; font: 600 15px var(--font-body); }
+.steps p { margin: 0 0 6px; color: var(--fg); }
+.steps .src { font: 12px var(--font-mono); color: var(--muted); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.chips code { background: var(--code-bg); padding: 1px 6px; border-radius: 4px; font-size: 12.5px; }
+.pill { display: inline-block; font: 500 11.5px var(--font-body); padding: 1px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+.pill.on { color: var(--good); border-color: color-mix(in srgb, var(--good) 45%, var(--line)); }
+.pill.auto { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 0 0 20px; }
+.cards a { display: block; padding: 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); text-decoration: none; color: var(--fg); }
+.cards a:hover { border-color: var(--accent); }
+.cards b { display: block; font: 600 15px var(--font-display); color: var(--accent); margin-bottom: 2px; }
+.cards span { font-size: 13px; color: var(--muted); }
+
+.flow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 22px; font: 13px var(--font-mono); }
+.flow span.box { border: 1px solid var(--line); background: var(--surface); padding: 6px 10px; border-radius: 6px; }
+.flow span.box.kit { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); font-weight: 500; }
+.flow span.arrow { color: var(--muted); }
+
+.tree { font: 13px/1.55 var(--font-mono); }
+.tree .c { color: var(--muted); }
+
+@media (max-width: 760px) {
+  .shell { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  nav.side { position: static; }
+  nav.side ul { flex-direction: row; flex-wrap: wrap; gap: 4px; }
+  nav.side a { border: 1px solid var(--line); }
+  article h2 { font-size: 24px; }
+}
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+
+<header class="top">
+  <h1>reinstall-kit <span>wiki</span></h1>
+  <div class="meta">v2.0.0-alpha · Arch + Hyprland + caelestia reinstall kit</div>
+</header>
+
+<div class="shell">
+  <nav class="side" aria-label="Wiki pages">
+    <label for="q" class="group-label">Search</label>
+    <input id="q" type="search" placeholder="e.g. realtime, fstab, spotify" autocomplete="off">
+    <div id="results" hidden></div>
+    <div id="toc">
+      <div class="group-label">Start</div>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#quick-start">Reinstall in 3 steps</a></li>
+        <li><a href="#archinstall">archinstall checklist</a></li>
+      </ul>
+      <div class="group-label">How it works</div>
+      <ul>
+        <li><a href="#setup">setup.sh</a></li>
+        <li><a href="#kit-update">kit-update.sh</a></li>
+        <li><a href="#menu">Menu choices</a></li>
+      </ul>
+      <div class="group-label">Reference</div>
+      <ul>
+        <li><a href="#packages">Package groups</a></li>
+        <li><a href="#configs">Saved configs</a></li>
+        <li><a href="#files">Folder map</a></li>
+        <li><a href="#changelog">Changelog</a></li>
+      </ul>
+      <div class="group-label">Help</div>
+      <ul>
+        <li><a href="#recipes">How do I…</a></li>
+        <li><a href="#troubleshooting">Troubleshooting</a></li>
+        <li><a href="#manual">Still by hand</a></li>
+        
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+<!-- ───────────────────────── HOME ───────────────────────── -->
+<article data-page="home" data-title="Home">
+  <h2>Reinstall kit</h2>
+  <p class="lead">Rebuilds the whole Linux setup — Arch, caelestia + Hyprland, every program, your configs and fixes — on a fresh install with one script.</p>
+  <div class="flow" aria-label="How the kit moves a setup">
+    <span class="box">working PC</span><span class="arrow">— kit-update.sh →</span>
+    <span class="box kit">~/reinstall-kit</span><span class="arrow">— setup.sh →</span>
+    <span class="box">fresh Arch install</span>
+  </div>
+  <p>The kit has two scripts that work in opposite directions. <code>kit-update.sh</code> copies the working PC <em>into</em> the kit and never changes the PC. <code>setup.sh</code> reads the kit on a new install and builds everything back. The kit is a public git repo, so cloning it needs no login.</p>
+  <div class="cards">
+    <a href="#quick-start"><b>Reinstall now</b><span>The 3-step walkthrough</span></a>
+    <a href="#setup"><b>What setup.sh does</b><span>The 9 steps, in order</span></a>
+    <a href="#kit-update"><b>Keep the kit current</b><span>What kit-update.sh saves</span></a>
+    <a href="#recipes"><b>How do I…</b><span>Add a program, add a config</span></a>
+  </div>
+  <div class="note warn"><strong>Not yet run for real</strong>The kit has only been tested with <code>--dry-run</code> on the working PC. Keep the setup log from the first real reinstall so problems can be fixed.</div>
+</article>
+
+<!-- ───────────────────────── QUICK START ───────────────────────── -->
+<article data-page="quick-start" data-title="Reinstall in 3 steps" hidden>
+  <h2>Reinstall in 3 steps</h2>
+  <p class="lead">About 15 minutes of archinstall, 20–60 minutes of setup.sh (mostly waiting), then a short to-do list.</p>
+  <div class="note"><strong>Before you wipe anything</strong>On the old system, run <code>bash ~/reinstall-kit/kit-update.sh</code> one last time so the kit matches the PC.</div>
+  <ol class="steps">
+    <li><div><h4>Install plain Arch</h4>
+      <p>Boot the Arch USB (Rufus, ISO Image mode, GPT/UEFI). Connect with <code>iwctl</code> for Wi-Fi; Ethernet just works. Run <code>archinstall</code> and follow the <a href="#archinstall">checklist</a>. Pick Install, reboot, pull the USB.</p></div></li>
+    <li><div><h4>Get the kit and run it</h4>
+      <p>Log in, press <kbd>Super</kbd>+<kbd>Q</kbd> for a terminal. Clone the kit (no login needed) or copy it from a USB stick or backup drive to <code>~/reinstall-kit</code>:</p>
+<pre>git clone https://github.com/Vymnkoo/reinstall-kit ~/reinstall-kit
+bash ~/reinstall-kit/setup.sh</pre>
+      <p>Type your password (it doesn't show). In the menu, <kbd>Space</kbd> ticks, <kbd>Enter</kbd> starts. Around step 5 the desktop changes look — that's caelestia arriving.</p></div></li>
+    <li><div><h4>Reboot and finish</h4>
+      <p>Run <code>reboot</code>, then work through <code>~/reinstall-kit-report.txt</code>. See <a href="#manual">Still by hand</a> for the usual items.</p></div></li>
+  </ol>
+  <p>If setup.sh stops partway (internet drops, AUR down), run it again — it skips everything already done.</p>
+</article>
+
+<!-- ───────────────────────── ARCHINSTALL ───────────────────────── -->
+<article data-page="archinstall" data-title="archinstall checklist" hidden>
+  <h2>archinstall checklist</h2>
+  <p class="lead">What to pick in each archinstall menu. Bold rows matter most.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Menu</th><th>Pick</th></tr></thead>
+    <tbody>
+      <tr><td>Mirrors</td><td>your region</td></tr>
+      <tr><td>Locales</td><td>keyboard <code>us</code>, language <code>en_US.UTF-8</code></td></tr>
+      <tr><td><b>Disk configuration</b></td><td>See below</td></tr>
+      <tr><td>Swap</td><td>zram: yes</td></tr>
+      <tr><td>Bootloader</td><td>GRUB</td></tr>
+      <tr><td>Hostname</td><td>a name for the PC</td></tr>
+      <tr><td>Root password</td><td>leave empty</td></tr>
+      <tr><td><b>User account</b></td><td>your username, superuser: yes</td></tr>
+      <tr><td><b>Profile</b></td><td>Desktop → Hyprland</td></tr>
+      <tr><td>Graphics driver</td><td>NVIDIA RTX 20xx / GTX 16xx or newer → Nvidia (open kernel module). AMD / Intel → open-source</td></tr>
+      <tr><td>Audio</td><td>pipewire</td></tr>
+      <tr><td>Kernels</td><td><code>linux</code></td></tr>
+      <tr><td>Network</td><td>NetworkManager</td></tr>
+      <tr><td>Additional packages</td><td><code>git</code></td></tr>
+      <tr><td>Optional repositories</td><td>multilib (setup.sh turns it on too)</td></tr>
+      <tr><td>Timezone</td><td>your timezone</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Disk configuration</h3>
+  <div class="note warn"><strong>Do not touch the Windows partitions</strong>Windows, its boot partition and any data drives stay as they are. If you're unsure which partition is which, stop and check first.</div>
+  <p><b>A dual-boot PC:</b> Manual partitioning, change only the two Linux partitions:</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Partition</th><th>Size</th><th>Set to</th></tr></thead>
+    <tbody>
+      <tr><td>Linux boot</td><td>about 1 GiB</td><td>format, fat32, mount <code>/boot</code></td></tr>
+      <tr><td>Linux root</td><td>the rest</td><td>format, ext4, mount <code>/</code></td></tr>
+    </tbody>
+  </table></div>
+  <p><b>A Linux-only PC:</b> "Use a best-effort default layout" with ext4. This wipes that whole disk.</p>
+</article>
+
+<!-- ───────────────────────── SETUP.SH ───────────────────────── -->
+<article data-page="setup" data-title="setup.sh" hidden>
+  <h2>setup.sh</h2>
+  <p class="lead">Checks the machine, asks what to install, runs 9 steps, then writes a report.</p>
+<pre>bash setup.sh                     # do it
+bash setup.sh --dry-run           # print what it would do, change nothing
+KIT_CHOICES="apps dev" bash setup.sh   # skip the menu (testing)</pre>
+  <h3>Before the menu</h3>
+  <ul>
+    <li>Stops if run with <code>sudo</code>, if the system isn't Arch, or if <code>archlinux.org</code> can't be reached.</li>
+    <li>Asks for your password once and keeps sudo alive in the background.</li>
+    <li>Detects hardware: GPU vendor from <code>lspci</code>, CPU vendor from <code>/proc/cpuinfo</code>, Windows from any NTFS partition. GTX 9xx/10xx and older NVIDIA cards are flagged as too old for <code>nvidia-open</code>.</li>
+    <li>Shows the <a href="#menu">menu</a>, then a summary to confirm. From here on, output is also logged to <code>~/reinstall-kit-setup_&lt;date&gt;.log</code>.</li>
+  </ul>
+  <h3>The 9 steps</h3>
+  <ol class="steps">
+    <li><div><h4>Updating the system</h4><p>Turns on multilib and pacman colour, then <code>pacman -Syu</code> with <code>base-devel</code> and <code>git</code>.</p></div></li>
+    <li><div><h4>Getting paru</h4><p>Builds <code>paru-bin</code> from the AUR if missing. The only step that aborts the run on failure.</p></div></li>
+    <li><div><h4>Graphics + CPU drivers</h4><p>Installs each detected <code>hw-*</code> / <code>cpu-*</code> list. An old NVIDIA card is skipped and put on the to-do list.</p></div></li>
+    <li><div><h4>Installing your programs</h4><p>Imports Spotify's signing key directly from Spotify, then installs <code>core</code>, <code>tools</code> and each ticked group (<code>dualboot</code> adds <code>os-prober</code>). Makes <code>/opt/spotify</code> writable for spicetify.</p><p class="src">install_pkgs: whole list in one paru call → on failure, one package at a time</p></div></li>
+    <li><div><h4>Installing caelestia</h4><p>Installs <code>caelestia-cli</code>, then <code>caelestia install --enable-components …</code> with the saved components. Spotify/Discord/Todoist/Zen are dropped without <code>apps</code>; VSCodium/VS Code/Zed without <code>dev</code>.</p></div></li>
+    <li><div><h4>Putting back your own configs</h4><p>Copies <code>configs/home/</code> into <code>~</code>, skipping identical files and backing up replaced ones to <code>~/.reinstall-kit-backups/&lt;date&gt;/</code>. Re-adds <code>require("hyprland-gui")</code> to <code>hyprland.lua</code>, runs <code>fc-cache</code>, and enables restored user services with <code>WantedBy=default.target</code>.</p></div></li>
+    <li><div><h4>Extra tools</h4><p>uv tools (HyprMod), Flatpaks from Flathub, and with <code>dev</code>: Claude Code + VSCodium extensions. Applies the Spotify theme when running inside Hyprland; otherwise it goes on the to-do list.</p></div></li>
+    <li><div><h4>System settings</h4><p>Enables NetworkManager, bluetooth, sddm, weekly fstrim. Adds lines from <code>system/fstab-extra.txt</code> only for drives that exist (an example only, in the public kit). <code>dualboot</code>: os-prober on, clock in local time. <code>creative</code>: joins <code>realtime</code>.</p></div></li>
+    <li><div><h4>Updating the boot menu</h4><p>Rebuilds <code>/boot/grub/grub.cfg</code>; warns if Windows isn't in it yet.</p></div></li>
+  </ol>
+  <h3>Safe to re-run</h3>
+  <p>Every change goes through <code>run</code> / <code>srun</code> (sudo), which is what makes <code>--dry-run</code> work. A dry run prints a <code>[dry-run]</code> line for every command it skips, including ones whose output is normally hidden (since 1.2.4-alpha). Installed packages, existing group memberships, enabled services and identical files are all checked and skipped.</p>
+</article>
+
+<!-- ───────────────────────── KIT-UPDATE ───────────────────────── -->
+<article data-page="kit-update" data-title="kit-update.sh" hidden>
+  <h2>kit-update.sh</h2>
+  <p class="lead">Saves this PC's current setup into the kit. It only writes inside the kit (and its backup copy).</p>
+<pre>bash ~/reinstall-kit/kit-update.sh</pre>
+  <p>Run it after installing programs or changing settings.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>#</th><th>Saves</th><th>From</th><th>Into</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Your configs</td><td>each path in <code>configs/files.txt</code></td><td><code>configs/home/</code> (rebuilt fresh)</td></tr>
+      <tr><td>2</td><td>caelestia components</td><td><code>~/.local/state/caelestia/dots-state.json</code></td><td><code>caelestia-components.txt</code></td></tr>
+      <tr><td>3</td><td>VSCodium extensions</td><td><code>codium --list-extensions</code></td><td><code>vscodium-extensions.txt</code></td></tr>
+      <tr><td>4</td><td>uv tools</td><td><code>~/.local/share/uv/tools/*/uv-receipt.toml</code></td><td><code>uv-tools.txt</code></td></tr>
+      <tr><td>5</td><td>Resolve recipe</td><td><code>~/Projects/aur/davinci-resolve</code></td><td><code>extras/davinci-resolve/</code></td></tr>
+      <tr><td>6</td><td>New programs</td><td><code>pacman -Qqe</code> + Flatpaks</td><td>appended to <code>packages/apps.txt</code></td></tr>
+      <tr><td>7</td><td>History + backups</td><td>the kit</td><td>git commit → GitHub push → backup drive copy</td></tr>
+      
+    </tbody>
+  </table></div>
+  <h3>Package check</h3>
+  <p>Anything installed but not in any list is added to <code>apps.txt</code> — move it to a better group by hand, or to <code>_not-in-kit.txt</code> to leave it out. Anything in a list but no longer installed is only reported; lines are never deleted. Packages archinstall installs live in <code>_archinstall.txt</code> so they aren't flagged.</p>
+  <h3>Upload</h3>
+  <p>Commits are named <code>kit-update YYYY-MM-DD HH:MM</code>. A failed push (offline, <code>gh</code> not logged in) only warns; the next run pushes it.</p>
+</article>
+
+<!-- ───────────────────────── MENU ───────────────────────── -->
+<article data-page="menu" data-title="Menu choices" hidden>
+  <h2>Menu choices</h2>
+  <p class="lead">The desktop, drivers and terminal tools are always installed. The menu picks the extras.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Choice</th><th>Default</th><th>Installs</th><th>Also does</th></tr></thead>
+    <tbody>
+      <tr><td><code>apps</code></td><td><span class="pill on">on</span></td><td><a href="#packages">apps.txt</a></td><td>Spotify key import, spicetify permissions + theme; caelestia Spotify/Discord/Todoist/Zen parts</td></tr>
+      <tr><td><code>gaming</code></td><td><span class="pill on">on</span></td><td><a href="#packages">gaming.txt</a></td><td>Sober via Flatpak</td></tr>
+      <tr><td><code>creative</code></td><td><span class="pill on">on</span></td><td><a href="#packages">creative.txt</a></td><td>adds you to <code>realtime</code> (stops rtkit killing Ardour); Resolve + Ardour to-do items</td></tr>
+      <tr><td><code>dev</code></td><td><span class="pill on">on</span></td><td><a href="#packages">dev.txt</a></td><td>Claude Code, VSCodium extensions; caelestia VSCodium/VS Code/Zed parts</td></tr>
+      <tr><td><code>dualboot</code></td><td><span class="pill auto">if Windows found</span></td><td><code>os-prober</code></td><td>GRUB looks for Windows; clock set to local time (fixes the clock offset)</td></tr>
+    </tbody>
+  </table></div>
+</article>
+
+<!-- ───────────────────────── PACKAGES ───────────────────────── -->
+<article data-page="packages" data-title="Package groups" hidden>
+  <h2>Package groups</h2>
+  <p class="lead">One file per group in <code>packages/</code>, one name per line. paru installs both repo and AUR packages; <code>flatpak:</code> lines go to Flathub.</p>
+  <div id="pkg-tables"></div>
+</article>
+
+<!-- ───────────────────────── CONFIGS ───────────────────────── -->
+<article data-page="configs" data-title="Saved configs" hidden>
+  <h2>Saved configs</h2>
+  <p class="lead">Only files you changed yourself. caelestia's defaults aren't saved because <code>caelestia install</code> deploys them fresh.</p>
+  <p>The list lives in <code>configs/files.txt</code> (paths relative to <code>~</code>):</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Path</th><th>What it is</th></tr></thead>
+    <tbody>
+      <tr><td><code>.config/caelestia/hypr-user.lua</code>, <code>hypr-vars.lua</code></td><td>Your Hyprland additions on top of caelestia</td></tr>
+      <tr><td><code>.config/caelestia/shell.json</code>, <code>shell-tokens.json</code></td><td>Shell settings and UI size</td></tr>
+      <tr><td><code>.config/caelestia/user-config.fish</code></td><td>Your fish additions, incl. the PATH line for <code>update-all</code></td></tr>
+      <tr><td><code>.local/bin/update-all</code></td><td>Updates pacman + AUR + Flatpak + uv tools in one go (skips Resolve)</td></tr>
+      <tr><td><code>.local/bin/audio-boot-log</code> + its <code>.service</code></td><td>Logs the audio output at boot to <code>~/.local/state/audio-boot.log</code></td></tr>
+      <tr><td><code>.config/hypr/hyprland-gui.lua</code>, <code>hyprmod/</code></td><td>HyprMod's settings</td></tr>
+      <tr><td><code>.config/VSCodium/User/settings.json</code></td><td>VSCodium settings</td></tr>
+      <tr><td><code>.config/kitty</code></td><td>kitty terminal settings</td></tr>
+      <tr><td><code>.config/mimeapps.list</code></td><td>Default apps</td></tr>
+      <tr><td><code>.config/ardour9/…</code></td><td>Ardour preferences (not the project list or plugin scan log)</td></tr>
+      <tr><td><code>.local/share/fonts</code></td><td>TH Sarabun New</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note"><strong>Why not edit config.fish?</strong><code>~/.config/fish/config.fish</code> is a copy caelestia deploys and overwrites on update. Put your own lines in <code>~/.config/caelestia/user-config.fish</code>.</div>
+</article>
+
+<!-- ───────────────────────── FILES ───────────────────────── -->
+<article data-page="files" data-title="Folder map" hidden>
+  <h2>Folder map</h2>
+  <p class="lead">Everything the scripts act on is a text list or a copied file.</p>
+<pre class="tree">reinstall-kit/
+├── README.md               <span class="c">beginner guide</span>
+├── CHANGELOG.md            <span class="c">one line per version</span>
+├── setup.sh                <span class="c">the installer</span>
+├── kit-update.sh           <span class="c">saves the working PC into the kit</span>
+├── packages/
+│   ├── core.txt tools.txt  <span class="c">always installed</span>
+│   ├── apps.txt gaming.txt creative.txt dev.txt              <span class="c">menu groups</span>
+│   ├── hw-nvidia.txt hw-amd.txt hw-intel.txt                 <span class="c">GPU, auto</span>
+│   ├── cpu-amd.txt cpu-intel.txt                             <span class="c">microcode, auto</span>
+│   ├── _not-in-kit.txt     <span class="c">left out on purpose (e.g. OBS)</span>
+│   └── _archinstall.txt    <span class="c">known, never installed by setup.sh</span>
+├── configs/
+│   ├── files.txt           <span class="c">which configs to save</span>
+│   ├── home/               <span class="c">the saved copies (mirrors ~)</span>
+│   ├── caelestia-components.txt
+│   ├── vscodium-extensions.txt
+│   └── uv-tools.txt
+├── system/fstab-extra.txt  <span class="c">extra drives (example only)</span>
+└── extras/davinci-resolve/ <span class="c">PKGBUILD + install-resolve.sh</span></pre>
+  <h3>Files setup.sh creates</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>File</th><th>Holds</th></tr></thead>
+    <tbody>
+      <tr><td><code>~/reinstall-kit-setup_&lt;date&gt;.log</code></td><td>Everything printed during the run</td></tr>
+      <tr><td><code>~/reinstall-kit-report.txt</code></td><td>Problems + the still-to-do list</td></tr>
+      <tr><td><code>~/.reinstall-kit-backups/&lt;date&gt;/</code></td><td>Your old versions of any config it replaced</td></tr>
+      <tr><td><code>/tmp/reinstall-kit-dryrun_&lt;date&gt;.log</code></td><td>Log of a <code>--dry-run</code></td></tr>
+    </tbody>
+  </table></div>
+</article>
+
+<!-- ───────────────────────── RECIPES ───────────────────────── -->
+<article data-page="recipes" data-title="How do I…" hidden>
+  <h2>How do I…</h2>
+  <p class="lead">Common changes to the kit.</p>
+  <h3>Add a program</h3>
+  <p>Install it normally, then run <code>kit-update.sh</code> — it lands in <code>apps.txt</code>. Or add the name by hand to the right file in <code>packages/</code>. For a Flatpak, write <code>flatpak:&lt;app id&gt;</code>.</p>
+  <h3>Move a program to another group</h3>
+  <p>Cut its line from <code>apps.txt</code> and paste it into <code>gaming.txt</code>, <code>dev.txt</code>, etc. A game left in <code>apps.txt</code> is skipped when you tick gaming but untick apps.</p>
+  <h3>Remove a program</h3>
+  <p>Delete its line. kit-update.sh lists programs that are in the kit but no longer installed, but never deletes them itself.</p>
+  <h3>Keep an installed program out of the kit</h3>
+  <p>Move its line from <code>apps.txt</code> to <code>packages/_not-in-kit.txt</code>. setup.sh never installs that list, and kit-update.sh stops adding the program back. OBS is there now; install it from Bazaar when you need it.</p>
+  <h3>Save another config</h3>
+  <p>Add its path (relative to <code>~</code>) to <code>configs/files.txt</code>, then run <code>kit-update.sh</code>. Folders work too.</p>
+  <h3>Bring back an older kit</h3>
+<pre>cd ~/reinstall-kit
+git log --oneline              # find the save you want
+git checkout &lt;commit&gt; -- configs/home/.config/caelestia/shell.json</pre>
+  <h3>Test without changing anything</h3>
+<pre>bash ~/reinstall-kit/setup.sh --dry-run</pre>
+  <h3>Release a new kit version</h3>
+  <p>Bump <code>KIT_VERSION</code> at the top of <code>setup.sh</code> (<code>MAJOR.MINOR.PATCH-alpha</code>) and add one line at the top of <code>CHANGELOG.md</code>.</p>
+</article>
+
+<!-- ───────────────────────── TROUBLESHOOTING ───────────────────────── -->
+<article data-page="troubleshooting" data-title="Troubleshooting" hidden>
+  <h2>Troubleshooting</h2>
+  <p class="lead">Messages setup.sh can show, and what to do.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>You see</th><th>Do this</th></tr></thead>
+    <tbody>
+      <tr><td>Don't run this with sudo</td><td>Run <code>bash setup.sh</code> as yourself; it asks for the password.</td></tr>
+      <tr><td>No internet</td><td>Connect with <code>nmtui</code>, then run it again.</td></tr>
+      <tr><td>Could not install paru</td><td>Check internet / AUR status, run it again.</td></tr>
+      <tr><td><code>✘ could not install &lt;pkg&gt;</code></td><td>Usually an AUR build failing. The rest still installs. Try <code>paru -S &lt;pkg&gt;</code> later, or re-run setup.sh.</td></tr>
+      <tr><td>could not import Spotify's key</td><td>Re-run later; Spotify won't build without it.</td></tr>
+      <tr><td>caelestia install reported an error</td><td>Read the log, then re-run setup.sh.</td></tr>
+      <tr><td>Windows not found yet</td><td>Reboot, then <code>sudo grub-mkconfig -o /boot/grub/grub.cfg</code>.</td></tr>
+      <tr><td>could not mount &lt;drive&gt; now</td><td>It's in fstab; it will try again at boot.</td></tr>
+      <tr><td>NVIDIA card is too old for nvidia-open</td><td>Install the legacy driver by hand (Arch wiki "NVIDIA").</td></tr>
+      <tr><td>kit-update: could not upload to GitHub</td><td>Run <code>gh auth login</code>; the next kit-update pushes.</td></tr>
+      <tr><td>kit-update: not found, skipped: ~/…</td><td>A path in <code>files.txt</code> doesn't exist on this PC. Remove the line or ignore it.</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Something went wrong partway</h3>
+  <p>Run <code>bash ~/reinstall-kit/setup.sh</code> again. It skips everything already installed or set, so a re-run only does what's missing.</p>
+  <h3>A config came back wrong</h3>
+  <p>Your previous version is in <code>~/.reinstall-kit-backups/&lt;date&gt;/</code> at the same path.</p>
+</article>
+
+<!-- ───────────────────────── MANUAL ───────────────────────── -->
+<article data-page="manual" data-title="Still by hand" hidden>
+  <h2>Still by hand</h2>
+  <p class="lead">Things the kit can't do for you. setup.sh lists the ones that apply in <code>~/reinstall-kit-report.txt</code>.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Item</th><th>When</th><th>How</th></tr></thead>
+    <tbody>
+      <tr><td>DaVinci Resolve</td><td><code>creative</code></td><td>Download the Linux zip into <code>~/Downloads</code>, then <code>bash ~/reinstall-kit/extras/davinci-resolve/install-resolve.sh</code></td></tr>
+      <tr><td>Ardour audio system</td><td><code>creative</code></td><td>Pick JACK/Pipewire, not ALSA</td></tr>
+      <tr><td>Spotify theme</td><td>if it didn't apply</td><td>Open Spotify, log in, close it, <code>spicetify backup apply</code></td></tr>
+      <tr><td>Angsana New</td><td>always</td><td>Copy <code>angsa*.ttf</code> from <code>C:\Windows\Fonts</code> to <code>~/.local/share/fonts</code>, then <code>fc-cache -f</code></td></tr>
+      
+      <tr><td>Legacy NVIDIA driver</td><td>old card</td><td>Arch wiki "NVIDIA" page</td></tr>
+    </tbody>
+  </table></div>
+</article>
+
+<!-- ───────────────────────── PRIVATE ADD-ON ───────────────────────── -->
+
+
+<!-- ───────────────────────── CHANGELOG ───────────────────────── -->
+<article data-page="changelog" data-title="Changelog" hidden>
+  <h2>Changelog</h2>
+  <p class="lead">From <code>CHANGELOG.md</code>, newest first.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
+    <tbody>
+      <tr><td><code>2.0.0-alpha</code></td><td>2026-11-16</td><td>Kit split in two. This repo is now public (clone with no login); personal parts moved to a private add-on repo. Ardour project list and plugin scan log no longer saved.</td></tr>
+      <tr><td><code>1.2.4-alpha</code></td><td>2026-11-16</td><td><code>--dry-run</code> now shows every command it skips; before, the font refresh, Spotify theme, wallpaper, sleep masking and GRUB rebuild showed ✔ with no <code>[dry-run]</code> line.</td></tr>
+      <tr><td><code>1.2.3-alpha</code></td><td>2026-11-16</td><td>Bedrock client (<code>bedrock-on-linux-bin</code>) added to apps.txt. New <code>packages/_not-in-kit.txt</code> for programs left out on purpose (OBS: get it from Bazaar).</td></tr>
+      <tr><td><code>1.2.2-alpha</code></td><td>2026-11-16</td><td>How-it-works doc added as <code>docs/how-it-works.md</code> (GitHub shows it as a page); README links to it.</td></tr>
+      <tr><td><code>1.2.1-alpha</code></td><td>2026-11-16</td><td>Kit wiki added as <code>wiki/index.html</code> (open it in a browser, works offline); README links to it.</td></tr>
+      <tr><td><code>1.2.0-alpha</code></td><td>2026-11-16</td><td>Saves the audio-boot-log script + user service; setup.sh switches it on at login. Airwindows + Vital moved to creative.txt.</td></tr>
+      <tr><td><code>1.1.0-alpha</code></td><td>2026-11-16</td><td>Saves and restores <code>update-all</code>; its PATH line lives in caelestia/user-config.fish.</td></tr>
+      <tr><td><code>1.0.1-alpha</code></td><td>2026-11-15</td><td>GitHub repo; kit-update.sh uploads after each save; README explains cloning.</td></tr>
+      <tr><td><code>1.0.0-alpha</code></td><td>2026-11-15</td><td>First version: setup.sh (menu, 9 steps, dry-run, retry-safe), kit-update.sh, package groups, archinstall checklist, Resolve helper.</td></tr>
+    </tbody>
+  </table></div>
+</article>
+  </main>
+</div>
+
+<script>
+const PKGS = [
+  { file: "core.txt", when: "always", kind: "on", note: "Desktop basics", list: "hyprland uwsm sddm xdg-desktop-portal-hyprland xdg-desktop-portal-gtk xdg-user-dirs xdg-utils qt5-wayland qt6-wayland polkit-gnome polkit-kde-agent gnome-keyring network-manager-applet bluez bluez-utils pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse wireplumber gst-plugin-pipewire libpulse rtkit noto-fonts noto-fonts-cjk noto-fonts-emoji ttf-jetbrains-mono-nerd papirus-icon-theme papirus-folders adw-gtk-theme darkly-bin qtengine frameworkintegration dolphin thunar kitty foot fish wl-clipboard cliphist grim slurp hyprpicker wofi dunst ydotool gnome-tweaks pwvucontrol git curl wget unzip zip 7zip ntfs-3g smartmontools trash-cli flatpak uv github-cli" },
+  { file: "tools.txt", when: "always", kind: "on", note: "Terminal tools", list: "bat btop eza fastfetch htop jq lazygit micro neovim ripgrep starship zoxide direnv tmux nvtop" },
+  { file: "apps.txt", when: "apps", kind: "", note: "Everyday apps", list: "firefox zen-browser-bin discord equibop-bin spotify spicetify-cli spicetify-marketplace-bin onlyoffice-bin todoist-appimage proton-vpn-gtk-app bazaar mpv flatpak:com.github.tchx84.Flatseal bedrock-on-linux-bin" },
+  { file: "gaming.txt", when: "gaming", kind: "", note: "Gaming", list: "steam modrinth-app ntsync-autoload heroic-games-launcher-bin osu-lazer-bin flatpak:org.vinegarhq.Sober" },
+  { file: "creative.txt", when: "creative", kind: "", note: "Music + video (Resolve installed separately)", list: "ardour realtime-privileges apr-util ffmpeg4.4 libc++ libc++abi qt5-multimedia qt5-quickcontrols2 xmlsec gst-plugins-base gst-plugins-good airwindows-consolidated-bin vital-synth" },
+  { file: "dev.txt", when: "dev", kind: "", note: "Coding (Claude Code installed separately)", list: "code vscodium-bin vscodium-bin-marketplace zed jdk21-openjdk jdk25-openjdk maven" },
+  { file: "hw-nvidia.txt", when: "NVIDIA GPU", kind: "auto", note: "RTX 20xx / GTX 16xx and newer", list: "nvidia-open nvidia-utils lib32-nvidia-utils libva-nvidia-driver opencl-nvidia egl-wayland" },
+  { file: "hw-amd.txt", when: "AMD GPU", kind: "auto", note: "", list: "mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon" },
+  { file: "hw-intel.txt", when: "Intel GPU", kind: "auto", note: "", list: "mesa lib32-mesa vulkan-intel lib32-vulkan-intel intel-media-driver" },
+  { file: "cpu-amd.txt", when: "AMD CPU", kind: "auto", note: "", list: "amd-ucode" },
+  { file: "cpu-intel.txt", when: "Intel CPU", kind: "auto", note: "", list: "intel-ucode" },
+  { file: "_not-in-kit.txt", when: "never (left out on purpose)", kind: "", note: "Installed here, get them from Bazaar; stops kit-update.sh re-adding them", list: "flatpak:com.obsproject.Studio" },
+  { file: "_archinstall.txt", when: "never (archinstall does it)", kind: "", note: "Only so kit-update.sh doesn't flag them", list: "base base-devel linux linux-firmware mkinitcpio grub efibootmgr sudo zram-generator nano vim wpa_supplicant networkmanager" }
+];
+
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+document.getElementById("pkg-tables").innerHTML =
+  '<div class="table-wrap"><table><thead><tr><th>File</th><th>Installed when</th><th>Packages</th></tr></thead><tbody>' +
+  PKGS.map(g => {
+    const items = g.list.split(" ");
+    return `<tr><td><code>${esc(g.file)}</code><br><small style="color:var(--muted)">${items.length} · ${esc(g.note)}</small></td>` +
+      `<td><span class="pill ${g.kind}">${esc(g.when)}</span></td>` +
+      `<td><div class="chips">${items.map(p => `<code>${esc(p)}</code>`).join("")}</div></td></tr>`;
+  }).join("") + "</tbody></table></div>";
+
+const pages = [...document.querySelectorAll("article[data-page]")];
+const links = [...document.querySelectorAll("#toc a")];
+function show() {
+  const id = (location.hash || "#home").slice(1);
+  const target = pages.find(p => p.dataset.page === id) || pages[0];
+  pages.forEach(p => { p.hidden = p !== target; });
+  links.forEach(a => a.toggleAttribute("aria-current", a.getAttribute("href") === "#" + target.dataset.page));
+  links.forEach(a => { if (a.hasAttribute("aria-current")) a.setAttribute("aria-current", "page"); });
+  document.title = target.dataset.page === "home" ? "Reinstall Kit Wiki" : target.dataset.title + " · Reinstall Kit Wiki";
+  window.scrollTo(0, 0);
+}
+addEventListener("hashchange", show);
+show();
+
+const q = document.getElementById("q"), results = document.getElementById("results"), toc = document.getElementById("toc");
+q.addEventListener("input", () => {
+  const term = q.value.trim().toLowerCase();
+  if (!term) { results.hidden = true; toc.hidden = false; return; }
+  const hits = pages.map(p => {
+    const text = p.textContent.replace(/\s+/g, " ");
+    const i = text.toLowerCase().indexOf(term);
+    return i < 0 ? null : { p, snip: (i > 30 ? "…" : "") + text.slice(Math.max(0, i - 30), i + term.length + 50) + "…" };
+  }).filter(Boolean);
+  results.innerHTML = hits.length
+    ? hits.map(h => `<a href="#${h.p.dataset.page}">${esc(h.p.dataset.title)}<small>${esc(h.snip)}</small></a>`).join("")
+    : '<div class="none">No page mentions that.</div>';
+  results.hidden = false; toc.hidden = true;
+});
+results.addEventListener("click", e => { if (e.target.closest("a")) { q.value = ""; results.hidden = true; toc.hidden = false; } });
+</script>
+
+</html>

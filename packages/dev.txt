@@ -1,0 +1,8 @@
+# Coding. Claude Code is installed separately by setup.sh.
+code
+vscodium-bin
+vscodium-bin-marketplace
+zed
+jdk21-openjdk
+jdk25-openjdk
+maven

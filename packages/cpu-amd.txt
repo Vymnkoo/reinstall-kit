@@ -1,0 +1,2 @@
+# Picked automatically for AMD CPUs.
+amd-ucode

@@ -1,0 +1,3 @@
+# Installed on this PC but left out of the kit on purpose (get them from Bazaar when needed).
+# setup.sh never installs these; kit-update.sh just knows them so it doesn't add them to apps.txt.
+flatpak:com.obsproject.Studio

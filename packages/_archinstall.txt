@@ -1,0 +1,14 @@
+# Installed by archinstall itself - setup.sh does NOT install these, kit-update just knows them.
+base
+base-devel
+linux
+linux-firmware
+mkinitcpio
+grub
+efibootmgr
+sudo
+zram-generator
+nano
+vim
+wpa_supplicant
+networkmanager

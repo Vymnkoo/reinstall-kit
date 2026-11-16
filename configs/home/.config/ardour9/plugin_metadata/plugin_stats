@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PluginStats>
+  <Plugin type="VST3" id="D696B572003344BC0072C4B500A11C12" lru="1794756880" use-count="1"/>
+  <Plugin type="VST3" id="ABCDEF019182FAEB53697874486E726A" lru="1794758583" use-count="2"/>
+  <Plugin type="VST3" id="ABCDEF019182FAEB44746872616C4658" lru="1794759464" use-count="1"/>
+  <Plugin type="VST3" id="56796D6E6B6F6F4175746F436F6D7048" lru="1794758672" use-count="2"/>
+  <Plugin type="VST3" id="565354734D617376616C68616C6C6173" lru="1794758079" use-count="1"/>
+  <Plugin type="VST3" id="56535454643561746472206E6F766100" lru="1794759936" use-count="4"/>
+  <Plugin type="VST3" id="5653545464313074647220766F732073" lru="1794757843" use-count="3"/>
+  <Plugin type="LV2" id="urn:ardour:a-reverb" lru="1794758111" use-count="2"/>
+  <Plugin type="LV2" id="urn:ardour:a-eq" lru="1794759537" use-count="2"/>
+  <Plugin type="LV2" id="urn:ardour:a-delay" lru="1794758156" use-count="1"/>
+  <Plugin type="LV2" id="urn:ardour:a-comp#stereo" lru="1794755286" use-count="1"/>
+</PluginStats>

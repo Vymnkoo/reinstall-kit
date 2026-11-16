@@ -1,0 +1,4 @@
+# Extra /etc/fstab lines. setup.sh adds a line only if that drive exists on the PC.
+# Put one line per drive, for example a Windows data drive (NTFS):
+# UUID=<drive uuid> /mnt/data ntfs3 uid=1000,gid=1000,windows_names,nofail 0 0
+# Find a drive's UUID with:  lsblk -f

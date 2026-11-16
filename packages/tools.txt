@@ -1,0 +1,16 @@
+# Terminal tools - always installed.
+bat
+btop
+eza
+fastfetch
+htop
+jq
+lazygit
+micro
+neovim
+ripgrep
+starship
+zoxide
+direnv
+tmux
+nvtop

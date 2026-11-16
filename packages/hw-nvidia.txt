@@ -1,0 +1,7 @@
+# Picked automatically for NVIDIA cards (RTX 20xx / GTX 16xx and newer).
+nvidia-open
+nvidia-utils
+lib32-nvidia-utils
+libva-nvidia-driver
+opencl-nvidia
+egl-wayland

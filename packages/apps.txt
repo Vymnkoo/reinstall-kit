@@ -1,0 +1,15 @@
+# Everyday apps.
+firefox
+zen-browser-bin
+discord
+equibop-bin
+spotify
+spicetify-cli
+spicetify-marketplace-bin
+onlyoffice-bin
+todoist-appimage
+proton-vpn-gtk-app
+bazaar
+mpv
+flatpak:com.github.tchx84.Flatseal
+bedrock-on-linux-bin

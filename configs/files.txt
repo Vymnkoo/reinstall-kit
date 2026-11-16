@@ -1,0 +1,25 @@
+# Files/folders (relative to your home folder) that kit-update.sh saves
+# and setup.sh puts back. Only YOUR changes - caelestia installs its own
+# defaults itself. Add a line here to keep something else.
+.config/caelestia/hypr-user.lua
+.config/caelestia/hypr-vars.lua
+.config/caelestia/shell.json
+.config/caelestia/shell-tokens.json
+.config/caelestia/user-config.fish
+.local/bin/update-all
+.local/bin/audio-boot-log
+.config/systemd/user/audio-boot-log.service
+.config/hypr/hyprland-gui.lua
+.config/hypr/hyprmod
+.config/VSCodium/User/settings.json
+.config/kitty
+.config/mimeapps.list
+.config/ardour9/config
+.config/ardour9/ui_config
+.config/ardour9/ui_scripts
+.config/ardour9/instant.xml
+.config/ardour9/session_port.rc
+.config/ardour9/export
+.config/ardour9/plugin_metadata/plugin_order
+.config/ardour9/plugin_metadata/plugin_stats
+.local/share/fonts

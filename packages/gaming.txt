@@ -1,0 +1,7 @@
+# Gaming. Lines starting with flatpak: are Flatpak apps.
+steam
+modrinth-app
+ntsync-autoload
+heroic-games-launcher-bin
+osu-lazer-bin
+flatpak:org.vinegarhq.Sober

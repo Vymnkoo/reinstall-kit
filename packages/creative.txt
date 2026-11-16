@@ -1,0 +1,15 @@
+# Music + video. DaVinci Resolve itself: extras/davinci-resolve/install-resolve.sh
+ardour
+realtime-privileges
+apr-util
+ffmpeg4.4
+libc++
+libc++abi
+qt5-multimedia
+qt5-quickcontrols2
+xmlsec
+gst-plugins-base
+gst-plugins-good
+# audio plugins for Ardour
+airwindows-consolidated-bin
+vital-synth
