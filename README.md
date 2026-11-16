@@ -4,6 +4,9 @@ Puts a whole Arch Linux setup back on a fresh install: caelestia + Hyprland, all
 the programs, the configs, fonts and the fixes found along the way
 (NVIDIA, Windows clock, Ardour realtime, Spotify key, ...).
 
+> [!IMPORTANT]
+> This repo was originally a private repo for personal installation of Linux. This was not meant for public installation, but if u want to install this, go ahead (: (I changed it to public cause i'am lazy to log in to my own GitHub repo lmao)
+
 **Online wiki:** https://vymnkoo-wiki.infinityfree.me
 
 More detail on every part: open **`wiki/index.html`** in a browser (works offline,
