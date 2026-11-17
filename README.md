@@ -5,7 +5,7 @@ the programs, the configs, fonts, and the fixes found along the way
 (NVIDIA, Windows clock, Ardour realtime, Spotify key, ...).
 
 > [!IMPORTANT]
-> This repo was originally a private repo for my personal Linux installation. This was not meant for public installation, but if u want to install this, go ahead (:
+> This repo was originally a private repo for my personal Linux installation and not meant for public installation. but if u want to install this, go ahead (:
 
 **Online wiki:** https://vymnkoo-wiki.infinityfree.me
 
