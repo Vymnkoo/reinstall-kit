@@ -1,0 +1,13 @@
+[General]
+Order=caelestia-glass-opacity
+
+[caelestia-glass-opacity]
+Description=Caelestia Glass: see-through windows (focused 92%, others 80%)
+opacityactive=92
+opacityactiverule=2
+opacityinactive=80
+opacityinactiverule=2
+types=1
+wmclass=^(?!(kitty|steam_app_.*|steam|gamescope.*|minecraft.*|com\\.mojang\\..*|java|mpv|vlc|celluloid|org\\.kde\\.haruna|resolve|org\\.kde\\.spectacle|org\\.kde\\.dolphin|firefox|org\\.mozilla\\.firefox|zen|zen-browser|app\\.zen_browser\\.zen)$).*$
+wmclasscomplete=false
+wmclassmatch=3

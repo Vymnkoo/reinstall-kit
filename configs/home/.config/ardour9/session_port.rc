@@ -2,7 +2,7 @@
 <SessionPorts>
   <Auditioner>
     <DirectOut>
-      <IO name="auditioner" id="12089" direction="Output" default-type="audio">
+      <IO name="auditioner" id="150" direction="Output" default-type="audio">
         <Port name="auditioner/audio_out 1" type="audio" direction="Output">
           <ExtConnection for="JACK"/>
           <ExtConnection for="JACK" other="Ryzen HD Audio Controller Analog Stereo:playback_FL"/>
@@ -15,7 +15,7 @@
     </DirectOut>
   </Auditioner>
   <Click>
-    <IO name="Click" id="76" direction="Output" default-type="audio">
+    <IO name="Click" id="77" direction="Output" default-type="audio">
       <Port name="Click/audio_out 1" type="audio" direction="Output">
         <ExtConnection for="JACK"/>
       </Port>

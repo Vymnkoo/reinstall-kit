@@ -1,0 +1,12 @@
+{
+    "KPackageStructure": "Plasma/LookAndFeel",
+    "KPlugin": {
+        "Authors": [ { "Name": "Vymnkoo" } ],
+        "Category": "Plasma Look And Feel",
+        "Description": "Caelestia Blush login splash",
+        "Id": "caelestia.blush.splash",
+        "License": "GPL-2.0-or-later",
+        "Name": "Caelestia Blush Splash",
+        "Version": "1.2.0-alpha"
+    }
+}

@@ -8,7 +8,7 @@
   <Plugin type="VST3" id="56535454643561746472206E6F766100" lru="1794759936" use-count="4"/>
   <Plugin type="VST3" id="5653545464313074647220766F732073" lru="1794757843" use-count="3"/>
   <Plugin type="LV2" id="urn:ardour:a-reverb" lru="1794758111" use-count="2"/>
-  <Plugin type="LV2" id="urn:ardour:a-eq" lru="1794759537" use-count="2"/>
+  <Plugin type="LV2" id="urn:ardour:a-eq" lru="1795263976" use-count="3"/>
   <Plugin type="LV2" id="urn:ardour:a-delay" lru="1794758156" use-count="1"/>
   <Plugin type="LV2" id="urn:ardour:a-comp#stereo" lru="1794755286" use-count="1"/>
 </PluginStats>

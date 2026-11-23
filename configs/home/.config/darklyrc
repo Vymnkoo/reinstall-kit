@@ -1,0 +1,11 @@
+[Common]
+CornerRadius=8
+
+[Style]
+DolphinSidebarOpacity=70
+DolphinViewOpacity=85
+MenuBarOpacity=55
+MenuOpacity=70
+TabBarOpacity=60
+ToolBarOpacity=55
+TransparentDolphinView=true

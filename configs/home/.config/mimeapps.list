@@ -1,7 +1,28 @@
 [Default Applications]
 x-scheme-handler/claude-cli=claude-code-url-handler.desktop
 x-scheme-handler/discord-1216669957799018608=discord-1216669957799018608.desktop
-audio/vnd.wave=firefox.desktop
+audio/vnd.wave=org.videolan.VLC.desktop
+x-scheme-handler/http=userapp-Zen-9FLEZ3.desktop
+x-scheme-handler/https=userapp-Zen-9FLEZ3.desktop
+x-scheme-handler/chrome=userapp-Zen-9FLEZ3.desktop
+text/html=userapp-Zen-9FLEZ3.desktop
+application/x-extension-htm=userapp-Zen-9FLEZ3.desktop
+application/x-extension-html=userapp-Zen-9FLEZ3.desktop
+application/x-extension-shtml=userapp-Zen-9FLEZ3.desktop
+application/xhtml+xml=userapp-Zen-9FLEZ3.desktop
+application/x-extension-xhtml=userapp-Zen-9FLEZ3.desktop
+application/x-extension-xht=userapp-Zen-9FLEZ3.desktop
 
 [Added Associations]
-audio/vnd.wave=mpv.desktop;firefox.desktop;
+audio/vnd.wave=org.videolan.VLC.desktop;mpv.desktop;firefox.desktop;
+x-scheme-handler/http=userapp-Zen-9FLEZ3.desktop;zen.desktop;
+x-scheme-handler/https=userapp-Zen-9FLEZ3.desktop;zen.desktop;
+x-scheme-handler/chrome=userapp-Zen-9FLEZ3.desktop;zen.desktop;
+text/html=zen.desktop;userapp-Zen-9FLEZ3.desktop;
+application/x-extension-htm=zen.desktop;userapp-Zen-9FLEZ3.desktop;
+application/x-extension-html=zen.desktop;userapp-Zen-9FLEZ3.desktop;
+application/x-extension-shtml=zen.desktop;userapp-Zen-9FLEZ3.desktop;
+application/xhtml+xml=zen.desktop;userapp-Zen-9FLEZ3.desktop;
+application/x-extension-xhtml=zen.desktop;userapp-Zen-9FLEZ3.desktop;
+application/x-extension-xht=zen.desktop;userapp-Zen-9FLEZ3.desktop;
+audio/x-wav=org.videolan.VLC.desktop;

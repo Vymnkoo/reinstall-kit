@@ -46,6 +46,5 @@
     "python.languageServer": "Pylance",
     "editor.inlayHints.enabled": "off",
     "qt-qml.qmlls.customExePath": "/usr/bin/qmlls6",
-    "qt-qml.doNotAskForQmllsDownload": true,
-    "claudeCode.preferredLocation": "panel"
+    "qt-qml.doNotAskForQmllsDownload": true
 }
