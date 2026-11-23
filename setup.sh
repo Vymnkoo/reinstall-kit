@@ -10,7 +10,7 @@
 #
 #  Safe to run again: anything already installed or set is skipped.
 # ─────────────────────────────────────────────────────────────────────────────
-KIT_VERSION="3.0.0-alpha"
+KIT_VERSION="3.0.1-alpha"
 set -uo pipefail
 
 KIT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

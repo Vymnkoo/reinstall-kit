@@ -39,7 +39,7 @@ if command -v codium &>/dev/null; then
   ok "$(wc -l < "$KIT/configs/vscodium-extensions.txt") VSCodium extensions"
 fi
 
-# 4. uv tools (e.g. HyprMod)
+# 4. uv tools
 {
   echo "# uv tools (setup.sh runs: uv tool install <line>)"
   for r in "$HOME"/.local/share/uv/tools/*/uv-receipt.toml; do

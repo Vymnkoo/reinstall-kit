@@ -5,7 +5,6 @@ xdg-user-dirs
 xdg-utils
 qt5-wayland
 qt6-wayland
-polkit-gnome
 polkit-kde-agent
 gnome-keyring
 network-manager-applet
@@ -31,11 +30,8 @@ darkly-bin
 qtengine
 frameworkintegration
 dolphin
-thunar
 kitty
 wl-clipboard
-wofi
-dunst
 ydotool
 gnome-tweaks
 pwvucontrol

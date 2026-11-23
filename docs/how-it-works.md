@@ -4,7 +4,7 @@ Nov 23, 2026 · Vymnkoo
 
 ## Overview
 
-The reinstall kit turns a plain `archinstall` system into the full working desktop in one script run: KDE Plasma with the Caelestia Blush look, every program, your own configs, fonts and the fixes found along the way (NVIDIA, Windows clock, Ardour realtime, Spotify key, login-screen blackout). It is at version **3.0.0-alpha** (up to 2.x it installed caelestia + Hyprland instead) and lives in `~/reinstall-kit`, a git repo on GitHub as the public repo `Vymnkoo/reinstall-kit`.
+The reinstall kit turns a plain `archinstall` system into the full working desktop in one script run: KDE Plasma with the Caelestia Blush look, every program, your own configs, fonts and the fixes found along the way (NVIDIA, Windows clock, Ardour realtime, Spotify key, login-screen blackout). It is at version **3.0.1-alpha** (up to 2.x it installed caelestia + Hyprland instead) and lives in `~/reinstall-kit`, a git repo on GitHub as the public repo `Vymnkoo/reinstall-kit`.
 
 It has two halves that work in opposite directions:
 
