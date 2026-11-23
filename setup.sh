@@ -230,7 +230,8 @@ if [[ -d $SRC ]]; then
 else warn "no saved configs in the kit (run kit-update.sh on a working PC first)"; fi
 # the login splash shows the wallpaper; the private add-on swaps in yours, until then use Plasma's
 SPLASH_BG="$HOME/.local/share/plasma/look-and-feel/caelestia.blush.splash/contents/splash/images/background.jpg"
-if [[ -d $(dirname "$SPLASH_BG") && ! -f $SPLASH_BG ]]; then
+if [[ -d ${SPLASH_BG%/contents/*} && ! -f $SPLASH_BG ]]; then   # (git drops the empty images/ folder)
+  run mkdir -p "$(dirname "$SPLASH_BG")"
   WP="$HOME/Pictures/Wallpapers/wallpaper.jpg"
   [[ -f $WP ]] || WP="$(ls /usr/share/wallpapers/Next/contents/images/*.png 2>/dev/null | head -1)"
   [[ -n $WP ]] && run cp "$WP" "$SPLASH_BG" && ok "login splash picture set"
