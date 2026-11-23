@@ -130,7 +130,7 @@ td:not(:last-child) code { white-space: nowrap; }            /* names, files and
 
 <header class="top">
   <h1>reinstall-kit <span>wiki</span></h1>
-  <div class="meta">v2.0.0-alpha · Arch + Hyprland + caelestia reinstall kit</div>
+  <div class="meta">v2.0.0-alpha · Arch + KDE Plasma reinstall kit</div>
 </header>
 
 <div class="shell">
@@ -172,7 +172,7 @@ td:not(:last-child) code { white-space: nowrap; }            /* names, files and
 <!-- ───────────────────────── HOME ───────────────────────── -->
 <article data-page="home" data-title="Home">
   <h2>Reinstall kit</h2>
-  <p class="lead">Rebuilds the whole Linux setup — Arch, caelestia + Hyprland, every program, your configs and fixes — on a fresh install with one script.</p>
+  <p class="lead">Rebuilds the whole Linux setup — Arch, KDE Plasma with the Caelestia Blush look, every program, your configs and fixes — on a fresh install with one script.</p>
   <div class="flow" aria-label="How the kit moves a setup">
     <span class="box">working PC</span><span class="arrow">— kit-update.sh →</span>
     <span class="box kit">~/reinstall-kit</span><span class="arrow">— setup.sh →</span>
@@ -200,7 +200,7 @@ td:not(:last-child) code { white-space: nowrap; }            /* names, files and
       <p>Log in, press <kbd>Super</kbd>+<kbd>Q</kbd> for a terminal. Clone the kit (no login needed) or copy it from a USB stick or backup drive to <code>~/reinstall-kit</code>:</p>
 <pre>git clone https://github.com/Vymnkoo/reinstall-kit ~/reinstall-kit
 bash ~/reinstall-kit/setup.sh</pre>
-      <p>Type your password (it doesn't show). In the menu, <kbd>Space</kbd> ticks, <kbd>Enter</kbd> starts. Around step 5 the desktop changes look — that's caelestia arriving.</p></div></li>
+      <p>Type your password (it doesn't show). In the menu, <kbd>Space</kbd> ticks, <kbd>Enter</kbd> starts. The new look shows fully after the reboot.</p></div></li>
     <li><div><h4>Reboot and finish</h4>
       <p>Run <code>reboot</code>, then work through <code>~/reinstall-kit-report.txt</code>. See <a href="#manual">Still by hand</a> for the usual items.</p></div></li>
   </ol>
@@ -222,7 +222,7 @@ bash ~/reinstall-kit/setup.sh</pre>
       <tr><td>Hostname</td><td>a name for the PC</td></tr>
       <tr><td>Root password</td><td>leave empty</td></tr>
       <tr><td><b>User account</b></td><td>your username, superuser: yes</td></tr>
-      <tr><td><b>Profile</b></td><td>Desktop → Hyprland</td></tr>
+      <tr><td><b>Profile</b></td><td>Desktop → KDE Plasma</td></tr>
       <tr><td>Graphics driver</td><td>NVIDIA RTX 20xx / GTX 16xx or newer → Nvidia (open kernel module). AMD / Intel → open-source</td></tr>
       <tr><td>Audio</td><td>pipewire</td></tr>
       <tr><td>Kernels</td><td><code>linux</code></td></tr>
@@ -264,11 +264,11 @@ KIT_CHOICES="apps dev" bash setup.sh   # skip the menu (testing)</pre>
     <li><div><h4>Updating the system</h4><p>Turns on multilib and pacman colour, then <code>pacman -Syu</code> with <code>base-devel</code> and <code>git</code>.</p></div></li>
     <li><div><h4>Getting paru</h4><p>Builds <code>paru-bin</code> from the AUR if missing. The only step that aborts the run on failure.</p></div></li>
     <li><div><h4>Graphics + CPU drivers</h4><p>Installs each detected <code>hw-*</code> / <code>cpu-*</code> list. An old NVIDIA card is skipped and put on the to-do list.</p></div></li>
-    <li><div><h4>Installing your programs</h4><p>Imports Spotify's signing key directly from Spotify, then installs <code>core</code>, <code>tools</code> and each ticked group (<code>dualboot</code> adds <code>os-prober</code>). Makes <code>/opt/spotify</code> writable for spicetify.</p><p class="src">install_pkgs: whole list in one paru call → on failure, one package at a time</p></div></li>
-    <li><div><h4>Installing caelestia</h4><p>Installs <code>caelestia-cli</code>, then <code>caelestia install --enable-components …</code> with the saved components. Spotify/Discord/Todoist/Zen are dropped without <code>apps</code>; VSCodium/VS Code/Zed without <code>dev</code>.</p></div></li>
-    <li><div><h4>Putting back your own configs</h4><p>Copies <code>configs/home/</code> into <code>~</code>, skipping identical files and backing up replaced ones to <code>~/.reinstall-kit-backups/&lt;date&gt;/</code>. Re-adds <code>require("hyprland-gui")</code> to <code>hyprland.lua</code>, runs <code>fc-cache</code>, and enables restored user services with <code>WantedBy=default.target</code>.</p></div></li>
-    <li><div><h4>Extra tools</h4><p>uv tools (HyprMod), Flatpaks from Flathub, and with <code>dev</code>: Claude Code + VSCodium extensions. Applies the Spotify theme when running inside Hyprland; otherwise it goes on the to-do list.</p></div></li>
-    <li><div><h4>System settings</h4><p>Enables NetworkManager, bluetooth, sddm, weekly fstrim. Adds lines from <code>system/fstab-extra.txt</code> only for drives that exist (an example only, in the public kit). <code>dualboot</code>: os-prober on, clock in local time. <code>creative</code>: joins <code>realtime</code>.</p></div></li>
+    <li><div><h4>Installing your programs</h4><p>Imports Spotify's signing key directly from Spotify, then installs <code>core</code>, <code>rice</code>, <code>tools</code> and each ticked group (<code>dualboot</code> adds <code>os-prober</code>). Makes <code>/opt/spotify</code> writable for spicetify.</p><p class="src">install_pkgs: whole list in one paru call → on failure, one package at a time</p></div></li>
+    <li><div><h4>The Caelestia Blush look</h4><p>Plasma and the rice packages came with <code>core</code> + <code>rice</code> in step 4. This step builds the rounded-corners KWin effect from <code>extras/kwin-rounded-corners/PKGBUILD</code> (a fixed copy; the AUR recipe was broken).</p></div></li>
+    <li><div><h4>Putting back your own configs</h4><p>Copies <code>configs/home/</code> into <code>~</code>, skipping identical files and backing up replaced ones to <code>~/.reinstall-kit-backups/&lt;date&gt;/</code>. Pauses Plasma's panel while copying so it can't overwrite the restored panels, gives the login splash a picture, runs <code>fc-cache</code>, and enables restored user services with <code>WantedBy=default.target</code>.</p></div></li>
+    <li><div><h4>Extra tools</h4><p>uv tools, Flatpaks from Flathub, and with <code>dev</code>: Claude Code + VSCodium extensions. Applies the Spotify theme; if that fails it goes on the to-do list.</p></div></li>
+    <li><div><h4>System settings</h4><p>Enables NetworkManager, bluetooth, sddm, weekly fstrim. Runs <code>system/plasma-rice/apply-system.sh</code>: blush astronaut login theme, login screen on KWin with your monitor + mouse settings (no black screen on login), no blinking <code>_</code> console cursor. Adds lines from <code>system/fstab-extra.txt</code> only for drives that exist (an example only, in the public kit). <code>dualboot</code>: os-prober on, clock in local time. <code>creative</code>: joins <code>realtime</code>.</p></div></li>
     <li><div><h4>Updating the boot menu</h4><p>Rebuilds <code>/boot/grub/grub.cfg</code>; warns if Windows isn't in it yet.</p></div></li>
   </ol>
   <h3>Safe to re-run</h3>
@@ -285,7 +285,7 @@ KIT_CHOICES="apps dev" bash setup.sh   # skip the menu (testing)</pre>
     <thead><tr><th>#</th><th>Saves</th><th>From</th><th>Into</th></tr></thead>
     <tbody>
       <tr><td>1</td><td>Your configs</td><td>each path in <code>configs/files.txt</code></td><td><code>configs/home/</code> (rebuilt fresh)</td></tr>
-      <tr><td>2</td><td>caelestia components</td><td><code>~/.local/state/caelestia/dots-state.json</code></td><td><code>caelestia-components.txt</code></td></tr>
+      <tr><td>2</td><td>Leave out</td><td>splash wallpaper copy, <code>*.bak</code> files</td><td>removed from <code>configs/home/</code></td></tr>
       <tr><td>3</td><td>VSCodium extensions</td><td><code>codium --list-extensions</code></td><td><code>vscodium-extensions.txt</code></td></tr>
       <tr><td>4</td><td>uv tools</td><td><code>~/.local/share/uv/tools/*/uv-receipt.toml</code></td><td><code>uv-tools.txt</code></td></tr>
       <tr><td>5</td><td>Resolve recipe</td><td><code>~/Projects/aur/davinci-resolve</code></td><td><code>extras/davinci-resolve/</code></td></tr>
@@ -307,10 +307,10 @@ KIT_CHOICES="apps dev" bash setup.sh   # skip the menu (testing)</pre>
   <div class="table-wrap"><table>
     <thead><tr><th>Choice</th><th>Default</th><th>Installs</th><th>Also does</th></tr></thead>
     <tbody>
-      <tr><td><code>apps</code></td><td><span class="pill on">on</span></td><td><a href="#packages">apps.txt</a></td><td>Spotify key import, spicetify permissions + theme; caelestia Spotify/Discord/Todoist/Zen parts</td></tr>
+      <tr><td><code>apps</code></td><td><span class="pill on">on</span></td><td><a href="#packages">apps.txt</a></td><td>Spotify key import, spicetify permissions + theme; Zen fix to-do item</td></tr>
       <tr><td><code>gaming</code></td><td><span class="pill on">on</span></td><td><a href="#packages">gaming.txt</a></td><td>Sober via Flatpak</td></tr>
       <tr><td><code>creative</code></td><td><span class="pill on">on</span></td><td><a href="#packages">creative.txt</a></td><td>adds you to <code>realtime</code> (stops rtkit killing Ardour); Resolve + Ardour to-do items</td></tr>
-      <tr><td><code>dev</code></td><td><span class="pill on">on</span></td><td><a href="#packages">dev.txt</a></td><td>Claude Code, VSCodium extensions; caelestia VSCodium/VS Code/Zed parts</td></tr>
+      <tr><td><code>dev</code></td><td><span class="pill on">on</span></td><td><a href="#packages">dev.txt</a></td><td>Claude Code, VSCodium extensions</td></tr>
       <tr><td><code>dualboot</code></td><td><span class="pill auto">if Windows found</span></td><td><code>os-prober</code></td><td>GRUB looks for Windows; clock set to local time (fixes the clock offset)</td></tr>
     </tbody>
   </table></div>
@@ -326,17 +326,20 @@ KIT_CHOICES="apps dev" bash setup.sh   # skip the menu (testing)</pre>
 <!-- ───────────────────────── CONFIGS ───────────────────────── -->
 <article data-page="configs" data-title="Saved configs" hidden>
   <h2>Saved configs</h2>
-  <p class="lead">Only files you changed yourself. caelestia's defaults aren't saved because <code>caelestia install</code> deploys them fresh.</p>
+  <p class="lead">Only files you changed yourself: the Plasma look, panels, shortcuts and app settings.</p>
   <p>The list lives in <code>configs/files.txt</code> (paths relative to <code>~</code>):</p>
   <div class="table-wrap"><table>
     <thead><tr><th>Path</th><th>What it is</th></tr></thead>
     <tbody>
-      <tr><td><code>.config/caelestia/hypr-user.lua</code>, <code>hypr-vars.lua</code></td><td>Your Hyprland additions on top of caelestia</td></tr>
-      <tr><td><code>.config/caelestia/shell.json</code>, <code>shell-tokens.json</code></td><td>Shell settings and UI size</td></tr>
-      <tr><td><code>.config/caelestia/user-config.fish</code></td><td>Your fish additions, incl. the PATH line for <code>update-all</code></td></tr>
+      <tr><td><code>.config/kdeglobals</code>, <code>plasmarc</code>, <code>klassy/</code>, <code>darklyrc</code>, <code>breezerc</code></td><td>Colours (Caelestia Blush Dark), icons, cursor, Plasma style, window decoration, app style</td></tr>
+      <tr><td><code>.config/kwinrc</code>, <code>kwinrulesrc</code></td><td>Blur (Better Blur DX), rounded corners, glass opacity rule and its exclusions (browsers, games, video)</td></tr>
+      <tr><td><code>.config/plasma-org.kde.plasma.desktop-appletsrc</code>, <code>plasmashellrc</code></td><td>Top bar, dock, desktop wallpaper setting</td></tr>
+      <tr><td><code>.config/kglobalshortcutsrc</code>, <code>kxkbrc</code>, <code>kcminputrc</code>, <code>kwinoutputconfig.json</code></td><td>Shortcuts, keyboard layouts (us + th), mouse, monitor</td></tr>
+      <tr><td><code>.config/ksplashrc</code>, <code>.local/share/plasma/look-and-feel/caelestia.blush.splash</code></td><td>The login animation (clock, greeting, PLEASE WAIT)</td></tr>
+      <tr><td><code>.local/share/color-schemes/CaelestiaBlush*.colors</code>, <code>plasma/desktoptheme/caelestia-glass</code></td><td>The colour schemes and the glass Plasma style</td></tr>
+      <tr><td><code>.bashrc</code>, <code>.config/fastfetch</code></td><td>Blush prompt, aliases, PATH line for <code>update-all</code>, fastfetch greeting</td></tr>
       <tr><td><code>.local/bin/update-all</code></td><td>Updates pacman + AUR + Flatpak + uv tools in one go (skips Resolve)</td></tr>
       <tr><td><code>.local/bin/audio-boot-log</code> + its <code>.service</code></td><td>Logs the audio output at boot to <code>~/.local/state/audio-boot.log</code></td></tr>
-      <tr><td><code>.config/hypr/hyprland-gui.lua</code>, <code>hyprmod/</code></td><td>HyprMod's settings</td></tr>
       <tr><td><code>.config/VSCodium/User/settings.json</code></td><td>VSCodium settings</td></tr>
       <tr><td><code>.config/kitty</code></td><td>kitty terminal settings</td></tr>
       <tr><td><code>.config/mimeapps.list</code></td><td>Default apps</td></tr>
@@ -344,7 +347,6 @@ KIT_CHOICES="apps dev" bash setup.sh   # skip the menu (testing)</pre>
       <tr><td><code>.local/share/fonts</code></td><td>TH Sarabun New</td></tr>
     </tbody>
   </table></div>
-  <div class="note"><strong>Why not edit config.fish?</strong><code>~/.config/fish/config.fish</code> is a copy caelestia deploys and overwrites on update. Put your own lines in <code>~/.config/caelestia/user-config.fish</code>.</div>
 </article>
 
 <!-- ───────────────────────── FILES ───────────────────────── -->
@@ -366,11 +368,15 @@ KIT_CHOICES="apps dev" bash setup.sh   # skip the menu (testing)</pre>
 ├── configs/
 │   ├── files.txt           <span class="c">which configs to save</span>
 │   ├── home/               <span class="c">the saved copies (mirrors ~)</span>
-│   ├── caelestia-components.txt
 │   ├── vscodium-extensions.txt
 │   └── uv-tools.txt
-├── system/fstab-extra.txt  <span class="c">extra drives (example only)</span>
-└── extras/davinci-resolve/ <span class="c">PKGBUILD + install-resolve.sh</span></pre>
+├── system/
+│   ├── plasma-rice/        <span class="c">login theme, login screen on KWin, console cursor</span>
+│   └── fstab-extra.txt     <span class="c">extra drives (example only)</span>
+└── extras/
+    ├── kwin-rounded-corners/ <span class="c">fixed PKGBUILD</span>
+    ├── zen/user.js           <span class="c">Zen flicker fix</span>
+    └── davinci-resolve/      <span class="c">PKGBUILD + install-resolve.sh</span></pre>
   <h3>Files setup.sh creates</h3>
   <div class="table-wrap"><table>
     <thead><tr><th>File</th><th>Holds</th></tr></thead>
@@ -400,7 +406,7 @@ KIT_CHOICES="apps dev" bash setup.sh   # skip the menu (testing)</pre>
   <h3>Bring back an older kit</h3>
 <pre>cd ~/reinstall-kit
 git log --oneline              # find the save you want
-git checkout &lt;commit&gt; -- configs/home/.config/caelestia/shell.json</pre>
+git checkout &lt;commit&gt; -- configs/home/.config/kwinrc</pre>
   <h3>Test without changing anything</h3>
 <pre>bash ~/reinstall-kit/setup.sh --dry-run</pre>
   <h3>Release a new kit version</h3>
@@ -419,7 +425,8 @@ git checkout &lt;commit&gt; -- configs/home/.config/caelestia/shell.json</pre>
       <tr><td>Could not install paru</td><td>Check internet / AUR status, run it again.</td></tr>
       <tr><td><code>✘ could not install &lt;pkg&gt;</code></td><td>Usually an AUR build failing. The rest still installs. Try <code>paru -S &lt;pkg&gt;</code> later, or re-run setup.sh.</td></tr>
       <tr><td>could not import Spotify's key</td><td>Re-run later; Spotify won't build without it.</td></tr>
-      <tr><td>caelestia install reported an error</td><td>Read the log, then re-run setup.sh.</td></tr>
+      <tr><td>could not build the rounded-corners effect</td><td>Windows just get square corners. Try later: copy <code>extras/kwin-rounded-corners/PKGBUILD</code> to an empty folder and run <code>makepkg -si</code> there.</td></tr>
+      <tr><td>login screen setup had errors</td><td>Read the log; re-run <code>sudo bash ~/reinstall-kit/system/plasma-rice/apply-system.sh $USER</code>. Undo steps are in its header.</td></tr>
       <tr><td>Windows not found yet</td><td>Reboot, then <code>sudo grub-mkconfig -o /boot/grub/grub.cfg</code>.</td></tr>
       <tr><td>could not mount &lt;drive&gt; now</td><td>It's in fstab; it will try again at boot.</td></tr>
       <tr><td>NVIDIA card is too old for nvidia-open</td><td>Install the legacy driver by hand (Arch wiki "NVIDIA").</td></tr>
@@ -460,13 +467,14 @@ git checkout &lt;commit&gt; -- configs/home/.config/caelestia/shell.json</pre>
   <div class="table-wrap"><table>
     <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
     <tbody>
+      <tr><td><code>3.0.0-alpha</code></td><td>2026-11-23</td><td>Desktop switched from caelestia + Hyprland to KDE Plasma with the Caelestia Blush look: Plasma + rice packages (new <code>rice.txt</code>), rounded-corners effect built from a fixed recipe, Plasma configs saved, blush login screen running on KWin, custom login splash, hidden console cursor, Zen fix.</td></tr>
       <tr><td><code>2.0.0-alpha</code></td><td>2026-11-16</td><td>Kit split in two. This repo is now public (clone with no login); personal parts moved to a private add-on repo. Ardour project list and plugin scan log no longer saved.</td></tr>
       <tr><td><code>1.2.4-alpha</code></td><td>2026-11-16</td><td><code>--dry-run</code> now shows every command it skips; before, the font refresh, Spotify theme, wallpaper, sleep masking and GRUB rebuild showed ✔ with no <code>[dry-run]</code> line.</td></tr>
       <tr><td><code>1.2.3-alpha</code></td><td>2026-11-16</td><td>Bedrock client (<code>bedrock-on-linux-bin</code>) added to apps.txt. New <code>packages/_not-in-kit.txt</code> for programs left out on purpose (OBS: get it from Bazaar).</td></tr>
       <tr><td><code>1.2.2-alpha</code></td><td>2026-11-16</td><td>How-it-works doc added as <code>docs/how-it-works.md</code> (GitHub shows it as a page); README links to it.</td></tr>
       <tr><td><code>1.2.1-alpha</code></td><td>2026-11-16</td><td>Kit wiki added as <code>wiki/index.html</code> (open it in a browser, works offline); README links to it.</td></tr>
       <tr><td><code>1.2.0-alpha</code></td><td>2026-11-16</td><td>Saves the audio-boot-log script + user service; setup.sh switches it on at login. Airwindows + Vital moved to creative.txt.</td></tr>
-      <tr><td><code>1.1.0-alpha</code></td><td>2026-11-16</td><td>Saves and restores <code>update-all</code>; its PATH line lives in caelestia/user-config.fish.</td></tr>
+      <tr><td><code>1.1.0-alpha</code></td><td>2026-11-16</td><td>Saves and restores <code>update-all</code>; its PATH line lived in caelestia/user-config.fish (now in <code>.bashrc</code>).</td></tr>
       <tr><td><code>1.0.1-alpha</code></td><td>2026-11-15</td><td>GitHub repo; kit-update.sh uploads after each save; README explains cloning.</td></tr>
       <tr><td><code>1.0.0-alpha</code></td><td>2026-11-15</td><td>First version: setup.sh (menu, 9 steps, dry-run, retry-safe), kit-update.sh, package groups, archinstall checklist, Resolve helper.</td></tr>
     </tbody>
@@ -477,11 +485,12 @@ git checkout &lt;commit&gt; -- configs/home/.config/caelestia/shell.json</pre>
 
 <script>
 const PKGS = [
-  { file: "core.txt", when: "always", kind: "on", note: "Desktop basics", list: "hyprland uwsm sddm xdg-desktop-portal-hyprland xdg-desktop-portal-gtk xdg-user-dirs xdg-utils qt5-wayland qt6-wayland polkit-gnome polkit-kde-agent gnome-keyring network-manager-applet bluez bluez-utils pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse wireplumber gst-plugin-pipewire libpulse rtkit noto-fonts noto-fonts-cjk noto-fonts-emoji ttf-jetbrains-mono-nerd papirus-icon-theme papirus-folders adw-gtk-theme darkly-bin qtengine frameworkintegration dolphin thunar kitty foot fish wl-clipboard cliphist grim slurp hyprpicker wofi dunst ydotool gnome-tweaks pwvucontrol git curl wget unzip zip 7zip ntfs-3g smartmontools trash-cli flatpak uv github-cli" },
-  { file: "tools.txt", when: "always", kind: "on", note: "Terminal tools", list: "bat btop eza fastfetch htop jq lazygit micro neovim ripgrep starship zoxide direnv tmux nvtop" },
-  { file: "apps.txt", when: "apps", kind: "", note: "Everyday apps", list: "firefox zen-browser-bin discord equibop-bin spotify spicetify-cli spicetify-marketplace-bin onlyoffice-bin todoist-appimage proton-vpn-gtk-app bazaar mpv flatpak:com.github.tchx84.Flatseal bedrock-on-linux-bin" },
-  { file: "gaming.txt", when: "gaming", kind: "", note: "Gaming", list: "steam modrinth-app ntsync-autoload heroic-games-launcher-bin osu-lazer-bin flatpak:org.vinegarhq.Sober" },
-  { file: "creative.txt", when: "creative", kind: "", note: "Music + video (Resolve installed separately)", list: "ardour realtime-privileges apr-util ffmpeg4.4 libc++ libc++abi qt5-multimedia qt5-quickcontrols2 xmlsec gst-plugins-base gst-plugins-good airwindows-consolidated-bin vital-synth" },
+  { file: "core.txt", when: "always", kind: "on", note: "Desktop basics + KDE Plasma", list: "sddm xdg-desktop-portal-gtk xdg-user-dirs xdg-utils qt5-wayland qt6-wayland polkit-gnome polkit-kde-agent gnome-keyring network-manager-applet bluez bluez-utils pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse wireplumber gst-plugin-pipewire libpulse rtkit noto-fonts noto-fonts-cjk noto-fonts-emoji ttf-jetbrains-mono-nerd papirus-icon-theme papirus-folders adw-gtk-theme darkly-bin qtengine frameworkintegration dolphin thunar kitty wl-clipboard wofi dunst ydotool gnome-tweaks pwvucontrol git curl wget unzip zip 7zip ntfs-3g smartmontools trash-cli flatpak uv github-cli plasma-desktop plasma-workspace plasma-workspace-wallpapers plasma-integration plasma-browser-integration plasma-nm plasma-pa plasma-disks plasma-firewall plasma-systemmonitor plasma-thunderbolt plasma-vault plasma-welcome plasma-keyboard plasma-activities-stats plasma5support plasma-login-manager plasma-bigscreen plasma-sdk kwin kwayland kscreen kscreenlocker kglobalacceld kactivitymanagerd kde-cli-tools kde-gtk-config kdeplasma-addons kinfocenter kmenuedit knighttime kpipewire krdp ksshaskpass ksystemstats kwallet-pam kwrited kwindowsystem5 kcmutils5 frameworkintegration5 kup layer-shell-qt libkscreen libksysguard libqalculate milou bluedevil breeze breeze-gtk breeze-cursors breeze-plymouth aurorae oxygen oxygen-cursors oxygen-sounds ocean-sound-theme qqc2-breeze-style discover flatpak-kcm drkonqi powerdevil power-profiles-daemon print-manager plymouth-kcm sddm-kcm spectacle systemsettings union xdg-desktop-portal-kde" },
+  { file: "rice.txt", when: "always", kind: "on", note: "The Caelestia Blush look (rounded corners is built from extras/)", list: "klassy kwin-effects-better-blur-dx sddm-astronaut-theme bibata-cursor-theme-bin" },
+  { file: "tools.txt", when: "always", kind: "on", note: "Terminal tools", list: "bat btop eza fastfetch htop jq lazygit micro neovim ripgrep zoxide direnv tmux nvtop cava" },
+  { file: "apps.txt", when: "apps", kind: "", note: "Everyday apps", list: "firefox zen-browser-bin discord equibop-bin spotify spicetify-cli spicetify-marketplace-bin onlyoffice-bin todoist-appimage proton-vpn-gtk-app bazaar mpv flatpak:com.github.tchx84.Flatseal bedrock-on-linux-bin flatpak:com.interversehq.qView flatpak:io.github.peazip.PeaZip flatpak:org.videolan.VLC" },
+  { file: "gaming.txt", when: "gaming", kind: "", note: "Gaming", list: "steam modrinth-app ntsync-autoload heroic-games-launcher-bin osu-lazer-bin flatpak:org.vinegarhq.Sober flatpak:net.davidotek.pupgui2" },
+  { file: "creative.txt", when: "creative", kind: "", note: "Music + video (Resolve installed separately)", list: "ardour realtime-privileges apr-util ffmpeg4.4 libc++ libc++abi qt5-multimedia qt5-quickcontrols2 xmlsec gst-plugins-base gst-plugins-good airwindows-consolidated-bin flatpak:org.gimp.GIMP" },
   { file: "dev.txt", when: "dev", kind: "", note: "Coding (Claude Code installed separately)", list: "code vscodium-bin vscodium-bin-marketplace zed jdk21-openjdk jdk25-openjdk maven" },
   { file: "hw-nvidia.txt", when: "NVIDIA GPU", kind: "auto", note: "RTX 20xx / GTX 16xx and newer", list: "nvidia-open nvidia-utils lib32-nvidia-utils libva-nvidia-driver opencl-nvidia egl-wayland" },
   { file: "hw-amd.txt", when: "AMD GPU", kind: "auto", note: "", list: "mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon" },

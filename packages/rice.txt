@@ -1,0 +1,7 @@
+# The Caelestia Blush Plasma look - always installed.
+# kwin-effect-rounded-corners-git is NOT here: its AUR recipe was broken, so setup.sh
+# builds it from extras/kwin-rounded-corners/PKGBUILD (a fixed copy).
+klassy
+kwin-effects-better-blur-dx
+sddm-astronaut-theme
+bibata-cursor-theme-bin

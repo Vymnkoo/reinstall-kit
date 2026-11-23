@@ -1,18 +1,39 @@
 # Files/folders (relative to your home folder) that kit-update.sh saves
-# and setup.sh puts back. Only YOUR changes - caelestia installs its own
-# defaults itself. Add a line here to keep something else.
-.config/caelestia/hypr-user.lua
-.config/caelestia/hypr-vars.lua
-.config/caelestia/shell.json
-.config/caelestia/shell-tokens.json
-.config/caelestia/user-config.fish
+# and setup.sh puts back. Add a line here to keep something else.
+
+# ── KDE Plasma: Caelestia Blush rice ──
+.config/kdeglobals
+.config/kwinrc
+.config/kwinrulesrc
+.config/kwinoutputconfig.json
+.config/kcminputrc
+.config/kxkbrc
+.config/kglobalshortcutsrc
+.config/ksplashrc
+.config/kscreenlockerrc
+.config/plasmarc
+.config/plasmashellrc
+.config/plasma-org.kde.plasma.desktop-appletsrc
+.config/klassy
+.config/darklyrc
+.config/breezerc
+.config/dolphinrc
+.config/spectaclerc
+.local/share/color-schemes/CaelestiaBlush.colors
+.local/share/color-schemes/CaelestiaBlushDark.colors
+.local/share/plasma/desktoptheme/caelestia-glass
+.local/share/plasma/look-and-feel/caelestia.blush.splash
+
+# ── terminal + shell ──
+.bashrc
+.config/kitty
+.config/fastfetch
+
+# ── tools + apps ──
 .local/bin/update-all
 .local/bin/audio-boot-log
 .config/systemd/user/audio-boot-log.service
-.config/hypr/hyprland-gui.lua
-.config/hypr/hyprmod
 .config/VSCodium/User/settings.json
-.config/kitty
 .config/mimeapps.list
 .config/ardour9/config
 .config/ardour9/ui_config

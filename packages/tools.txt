@@ -9,8 +9,8 @@ lazygit
 micro
 neovim
 ripgrep
-starship
 zoxide
 direnv
 tmux
 nvtop
+cava

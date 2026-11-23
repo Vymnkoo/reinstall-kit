@@ -13,3 +13,6 @@ bazaar
 mpv
 flatpak:com.github.tchx84.Flatseal
 bedrock-on-linux-bin
+flatpak:com.interversehq.qView
+flatpak:io.github.peazip.PeaZip
+flatpak:org.videolan.VLC

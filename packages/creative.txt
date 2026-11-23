@@ -12,4 +12,4 @@ gst-plugins-base
 gst-plugins-good
 # audio plugins for Ardour
 airwindows-consolidated-bin
-vital-synth
+flatpak:org.gimp.GIMP

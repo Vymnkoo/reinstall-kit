@@ -2,7 +2,7 @@
 # ─────────────────────────────────────────────────────────────────────────────
 #  Vymnkoo's reinstall kit - setup.sh
 #  Turns a fresh Arch install (made with archinstall, see README.md) into the
-#  full caelestia desktop with all apps, configs and fixes.
+#  full KDE Plasma desktop (Caelestia Blush look) with all apps, configs and fixes.
 #
 #  Run it as your normal user (NOT with sudo), from inside the kit folder:
 #      bash setup.sh            do it
@@ -10,7 +10,7 @@
 #
 #  Safe to run again: anything already installed or set is skipped.
 # ─────────────────────────────────────────────────────────────────────────────
-KIT_VERSION="2.0.0-alpha"
+KIT_VERSION="3.0.0-alpha"
 set -uo pipefail
 
 KIT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -107,7 +107,7 @@ onoff() { (( $1 )) && echo ON || echo OFF; }
 if [[ -n $KIT_CHOICES ]]; then CHOICES="$(tr ' ' '\n' <<<"$KIT_CHOICES")"; else
 CHOICES=$(whiptail --title "Vymnkoo's reinstall kit $KIT_VERSION" --separate-output --checklist \
 "Detected graphics: ${GPU_NAME:-unknown}
-The desktop (caelestia + Hyprland), drivers and terminal tools are always installed.
+The desktop (KDE Plasma, Caelestia Blush look), drivers and terminal tools are always installed.
 
 Pick the extras.  SPACE = tick/untick,  ENTER = start,  ESC = quit." 20 78 6 \
   apps     "Everyday apps (Zen, Discord, Spotify, OnlyOffice...)"   ON \
@@ -120,7 +120,7 @@ fi
 want() { grep -qx "$1" <<<"$CHOICES"; }
 
 SUMMARY="This will install:
-  • desktop: caelestia + Hyprland and your configs
+  • desktop: KDE Plasma + the Caelestia Blush look and your configs
   • drivers: ${HW_GROUPS[*]:-none detected}
   • extras:  $(echo $CHOICES)
 
@@ -175,7 +175,7 @@ if want apps && ! gpg --list-keys 5384CE82BA52C83A &>/dev/null; then
   run bash -c 'curl -fsSL https://download.spotify.com/debian/pubkey_5384CE82BA52C83A.gpg | gpg --import -' \
     || problem "could not import Spotify's key (Spotify may fail to build)"
 fi
-GROUPS_TO_INSTALL=(core tools)
+GROUPS_TO_INSTALL=(core rice tools)
 for g in apps gaming creative dev; do want "$g" && GROUPS_TO_INSTALL+=("$g"); done
 want dualboot && EXTRA_DUALBOOT=(os-prober) || EXTRA_DUALBOOT=()
 for g in "${GROUPS_TO_INSTALL[@]}"; do
@@ -189,27 +189,31 @@ if [[ -d /opt/spotify ]]; then
   [[ -f $HOME/.config/spotify/prefs ]] || { run mkdir -p "$HOME/.config/spotify"; run touch "$HOME/.config/spotify/prefs"; }
 fi
 
-# ── 5. caelestia ────────────────────────────────────────────────────────────
-step "Installing caelestia (shell + its configs)"
-install_pkgs caelestia-cli
-# the optional caelestia parts you use, minus the ones for groups you didn't pick
-OPTIONAL=()
-while read -r c; do
-  case "$c" in
-    spotify|discord|todoist|zen) want apps || continue ;;
-    vscodium|vscode|zed)         want dev  || continue ;;
-  esac
-  OPTIONAL+=("$c")
-done < <(grep -vE '^\s*(#|$)' "$KIT/configs/caelestia-components.txt")
-ENABLE="$(IFS=,; echo "${OPTIONAL[*]}")"
-info "components: default + $ENABLE"
-run caelestia install --aur-helper paru --enable-components "$ENABLE" --noconfirm \
-  || problem "caelestia install reported an error (see log)"
+# ── 5. the look ───────────────────────────────────────────────────────────
+step "The Caelestia Blush look (rounded corners)"
+# Plasma itself + Klassy, Better Blur DX, the login theme and cursor came with
+# packages/core.txt + rice.txt in step 4. The rounded-corners KWin effect is built
+# from our fixed recipe, because the AUR one was broken.
+if installed kwin-effect-rounded-corners-git; then ok "rounded corners already installed"
+elif ((DRY)); then echo "  ${DIM}[dry-run]${R} build + install kwin-effect-rounded-corners-git from extras/kwin-rounded-corners/PKGBUILD"
+else
+  TMPB="$(mktemp -d)"
+  cp "$KIT/extras/kwin-rounded-corners/PKGBUILD" "$TMPB/"
+  if ( cd "$TMPB" && makepkg -si --noconfirm --syncdeps --needed ); then ok "rounded corners installed"
+  else problem "could not build the rounded-corners effect (windows will have square corners)"; fi
+  rm -rf "$TMPB"
+fi
 
 # ── 6. your configs ─────────────────────────────────────────────────────────
 step "Putting back your own configs"
 SRC="$KIT/configs/home"
 if [[ -d $SRC ]]; then
+  # Plasma's panel saves its own config when it quits, which would undo the
+  # restored panels - so pause it while the files are copied.
+  PAUSED_SHELL=0
+  if ! ((DRY)) && pgrep -x plasmashell >/dev/null; then
+    systemctl --user stop plasma-plasmashell.service 2>/dev/null && PAUSED_SHELL=1
+  fi
   CHANGED=0; SAME=0
   while read -r f; do
     f="${f#./}"
@@ -222,12 +226,14 @@ if [[ -d $SRC ]]; then
   done < <(cd "$SRC" && find . -type f)
   ok "$CHANGED files put back, $SAME already the same"
   ((CHANGED && !DRY)) && info "the old versions are saved in $CFG_BACKUP"
+  ((PAUSED_SHELL)) && systemctl --user start plasma-plasmashell.service 2>/dev/null
 else warn "no saved configs in the kit (run kit-update.sh on a working PC first)"; fi
-# HyprMod's settings file only loads if hyprland.lua asks for it
-HL="$HOME/.config/hypr/hyprland.lua"
-if [[ -f $HOME/.config/hypr/hyprland-gui.lua && -f $HL ]] && ! grep -q 'require("hyprland-gui")' "$HL"; then
-  run bash -c "printf '\n-- HyprMod managed settings\nrequire(\"hyprland-gui\")\n' >> '$HL'"
-  ok "HyprMod settings hooked into Hyprland"
+# the login splash shows the wallpaper; the private add-on swaps in yours, until then use Plasma's
+SPLASH_BG="$HOME/.local/share/plasma/look-and-feel/caelestia.blush.splash/contents/splash/images/background.jpg"
+if [[ -d $(dirname "$SPLASH_BG") && ! -f $SPLASH_BG ]]; then
+  WP="$HOME/Pictures/Wallpapers/wallpaper.jpg"
+  [[ -f $WP ]] || WP="$(ls /usr/share/wallpapers/Next/contents/images/*.png 2>/dev/null | head -1)"
+  [[ -n $WP ]] && run cp "$WP" "$SPLASH_BG" && ok "login splash picture set"
 fi
 run fc-cache -f >/dev/null && ok "fonts refreshed"
 # user services that came back with the configs (e.g. audio-boot-log) - switch them on
@@ -283,6 +289,10 @@ for s in NetworkManager bluetooth sddm; do
 done
 systemctl is-enabled fstrim.timer &>/dev/null || { srun systemctl enable fstrim.timer && ok "SSD trim weekly"; }
 
+# login screen look, login screen on KWin, no blinking console cursor (see the script's header)
+srun bash "$KIT/system/plasma-rice/apply-system.sh" "$USER" </dev/null \
+  && ok "login screen + console set up" || problem "login screen setup had errors (see log)"
+
 # extra drives (e.g. D:) - only the ones that exist on this PC
 while read -r line; do
   [[ -z $line || $line == \#* ]] && continue
@@ -326,6 +336,7 @@ want creative && TODO+=("Ardour: pick the 'JACK/Pipewire' audio system (not ALSA
 # your own private add-on (wallpapers, extra drives, ...), if it's on this PC
 [[ -f $HOME/reinstall-kit-private/private-setup.sh ]] && TODO+=("Private add-on: run  bash ~/reinstall-kit-private/private-setup.sh  (add  network  to also set up server hosting)")
 TODO+=("Thai font Angsana New: copy angsa*.ttf from Windows (C:\\Windows\\Fonts) into ~/.local/share/fonts, then run  fc-cache -f")
+want apps && TODO+=("Zen browser: open it once, then copy  $KIT/extras/zen/user.js  into its profile folder (~/.config/zen/<something>.Default (release)/) - stops see-through flicker under blur")
 
 # ── report ──────────────────────────────────────────────────────────────────
 REPORT="$HOME/reinstall-kit-report.txt"

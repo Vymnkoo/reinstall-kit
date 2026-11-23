@@ -1,8 +1,12 @@
 # Vymnkoo's reinstall kit
 
-Puts a whole Arch Linux setup back on a fresh install: caelestia + Hyprland, all
-the programs, the configs, fonts, and the fixes found along the way
-(NVIDIA, Windows clock, Ardour realtime, Spotify key, ...).
+Puts a whole Arch Linux setup back on a fresh install: KDE Plasma with the
+**Caelestia Blush** look (blush colours, glass panels and windows, rounded corners,
+a matching login screen and login animation), all the programs, the configs, fonts,
+and the fixes found along the way (NVIDIA, Windows clock, Ardour realtime, Spotify key, ...).
+
+> Up to 2.x the kit installed caelestia + Hyprland. 3.0.0 switched to KDE Plasma;
+> the old version is still in the git history (check out a commit from before 3.0.0).
 
 > [!IMPORTANT]
 > This repo was originally a private repo for my personal Linux installation and not meant for public installation. But if u want to install this, go ahead (:
@@ -33,8 +37,9 @@ bash ~/reinstall-kit/kit-update.sh
 ```
 
 It only **copies into** the kit and never changes your PC. It:
-- saves your configs, caelestia settings, VSCodium extensions, HyprMod and
-  the `update-all` command (updates pacman + AUR + flatpak + uv tools in one go)
+- saves your configs (the Plasma look, panels, shortcuts, window rules, kitty, bash),
+  VSCodium extensions, uv tools and the `update-all` command (updates pacman + AUR +
+  flatpak + uv tools in one go)
 - adds programs you installed since last time to `packages/apps.txt`
 - keeps a history of every save (git), so an older version can be brought back
 - uploads it to GitHub, and makes a spare copy on a second drive if one is mounted
@@ -57,7 +62,7 @@ internet (`iwctl` for Wi-Fi, Ethernet just works). Type `archinstall` and set:
 | Hostname | a name for the PC |
 | Root password | leave empty (sudo user is enough) |
 | **User account** | your username, **superuser: yes** |
-| **Profile** | Desktop → **Hyprland** (gives you a login screen + terminal) |
+| **Profile** | Desktop → **KDE Plasma** (gives you a login screen + terminal) |
 | ↳ Graphics driver | NVIDIA RTX 20xx/GTX 16xx or newer → **Nvidia (open kernel module)**. AMD / Intel → **open-source** |
 | Audio | **pipewire** |
 | Kernels | `linux` |
@@ -88,7 +93,7 @@ Then pick **Install**, wait, choose **Reboot**, and pull out the USB stick.
 
 ## Step 2 – run the kit
 
-1. Log in. You'll see a plain Hyprland desktop. Press **Super+Q** to open a terminal (kitty).
+1. Log in. You'll see a plain KDE Plasma desktop. Open a terminal: press **Super**, type `Konsole`, press Enter.
 2. Get the kit into your home folder. The repo is public, so no login is needed:
    ```
    git clone https://github.com/Vymnkoo/reinstall-kit ~/reinstall-kit
@@ -111,8 +116,8 @@ Then pick **Install**, wait, choose **Reboot**, and pull out the USB stick.
    └──────────────────────────────────────────────────┘
    ```
 5. Wait. It goes through 9 steps and shows ✔ for each thing that worked.
-   Around step 5 **the desktop changes its look**. That's Caelestia arriving,
-   and it's normal.
+   The new look (blush colours, top bar + dock, glass, login screen) shows
+   fully **after the reboot** in step 3.
 
 If something fails (internet drops, AUR is down), just **run it again**. It
 skips everything that's already done.
@@ -134,12 +139,14 @@ At the end, setup.sh prints a **"still to do by hand"** list (also saved in
   `bash ~/reinstall-kit/extras/davinci-resolve/install-resolve.sh`
 - **Spotify theme**, if it didn't apply: open Spotify once, log in, close it, then `spicetify backup apply`
 - **Angsana New** (Thai font): copy it from Windows' font folder
+- **Zen browser**: open it once, then copy `extras/zen/user.js` into its profile folder
+  (stops see-through flicker under the blur)
 
 ---
 
 ## Private add-on
 
-Personal parts (wallpapers, this PC's extra drive, disk notes, server hosting)
+Personal parts (wallpapers, which also go on the login screen and splash, this PC's extra drive, disk notes, server hosting)
 live in a separate **private** repo, `reinstall-kit-private`. After setup.sh:
 
 ```
@@ -163,15 +170,20 @@ reinstall-kit/
 ├── setup.sh             ← the installer (step 2)
 ├── kit-update.sh        ← saves the working PC into the kit
 ├── packages/            ← lists of programs, one file per menu choice
-│   ├── core.txt tools.txt apps.txt gaming.txt creative.txt dev.txt
+│   ├── core.txt rice.txt tools.txt apps.txt gaming.txt creative.txt dev.txt
 │   ├── hw-*.txt cpu-*.txt   (drivers, picked automatically)
 │   └── _not-in-kit.txt _archinstall.txt   (never installed by setup.sh)
 ├── configs/
 │   ├── home/            ← your saved configs and fonts (copied to ~)
 │   ├── files.txt        ← which configs get saved (add lines here)
-│   └── caelestia-components.txt, vscodium-extensions.txt, uv-tools.txt
-├── system/fstab-extra.txt   ← extra drives to mount (example only)
-└── extras/davinci-resolve/  ← Resolve build recipe + installer
+│   └── vscodium-extensions.txt, uv-tools.txt
+├── system/
+│   ├── plasma-rice/         ← login screen theme, login screen on KWin, console cursor
+│   └── fstab-extra.txt      ← extra drives to mount (example only)
+└── extras/
+    ├── kwin-rounded-corners/  ← fixed build recipe for the rounded-corners effect
+    ├── zen/user.js            ← Zen browser fix
+    └── davinci-resolve/       ← Resolve build recipe + installer
 ```
 
 To add or remove a program, edit the right file in `packages/` (one name per line).

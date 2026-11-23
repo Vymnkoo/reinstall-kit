@@ -27,15 +27,11 @@ done < "$KIT/configs/files.txt"
 rm -rf "$DEST"; mv "$DEST.new" "$DEST"
 ok "$n config files/folders saved"
 
-# 2. which optional caelestia parts are switched on
-python3 - "$KIT/configs/caelestia-components.txt" <<'EOF' && ok "caelestia components saved" || warn "could not read caelestia's state"
-import json, os, sys
-st = os.path.join(os.environ.get("XDG_STATE_HOME", os.path.expanduser("~/.local/state")), "caelestia/dots-state.json")
-comps = json.load(open(st))["enabled_components"]
-with open(sys.argv[1], "w") as f:
-    f.write("# caelestia components that were switched on (from caelestia's dots-state.json)\n")
-    f.write("\n".join(comps) + "\n")
-EOF
+# 2. keep personal/leftover bits out of the public kit: the splash's copy of the
+#    wallpaper (wallpapers live in the private add-on) and *.bak / *.save files
+rm -f "$DEST/.local/share/plasma/look-and-feel/caelestia.blush.splash/contents/splash/images/background.jpg"
+find "$DEST" \( -name '*.bak' -o -name '*.bak-*' -o -name '*.save' \) -delete
+ok "wallpaper copy + backup files left out"
 
 # 3. VSCodium extensions
 if command -v codium &>/dev/null; then
@@ -65,7 +61,9 @@ fi
 # the private add-on's lists count as known too, so its packages don't land in apps.txt
 PRIVATE="${KIT_PRIVATE:-$HOME/reinstall-kit-private}"
 KNOWN="$(cat "$KIT"/packages/*.txt "$PRIVATE"/packages/*.txt 2>/dev/null | grep -vE '^\s*(#|$)' | sed 's/^flatpak://' | sort -u)"
-IGNORE="paru-bin paru-bin-debug caelestia-cli caelestia-shell caelestia-firefox-theme davinci-resolve os-prober"
+IGNORE="paru-bin paru-bin-debug davinci-resolve os-prober kwin-effect-rounded-corners-git"
+# installed outside pacman on this PC (setup.sh gets it from the AUR), so never "gone"
+HAND_INSTALLED="klassy"
 NEW=()
 while read -r p; do
   grep -qx "$p" <<<"$KNOWN" && continue
@@ -74,10 +72,11 @@ while read -r p; do
 done < <(pacman -Qqe; flatpak list --app --columns=application 2>/dev/null)
 GONE=()
 while read -r p; do
+  [[ " $HAND_INSTALLED " == *" $p "* ]] && continue
   pacman -Qq "$p" &>/dev/null && continue
   flatpak info "$p" &>/dev/null && continue
   GONE+=("$p")
-done < <(cat "$KIT"/packages/{core,tools,apps,gaming,creative,dev}.txt | grep -vE '^\s*(#|$)' | sed 's/^flatpak://')
+done < <(cat "$KIT"/packages/{core,rice,tools,apps,gaming,creative,dev}.txt | grep -vE '^\s*(#|$)' | sed 's/^flatpak://')
 
 if ((${#NEW[@]})); then
   echo

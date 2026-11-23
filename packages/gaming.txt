@@ -5,3 +5,4 @@ ntsync-autoload
 heroic-games-launcher-bin
 osu-lazer-bin
 flatpak:org.vinegarhq.Sober
+flatpak:net.davidotek.pupgui2
