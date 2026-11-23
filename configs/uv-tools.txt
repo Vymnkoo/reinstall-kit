@@ -1,2 +1,1 @@
 # uv tools (setup.sh runs: uv tool install <line>)
-git+https://github.com/BlueManCZ/hyprmod.git
